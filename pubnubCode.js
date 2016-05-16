@@ -19,5 +19,43 @@ pubnub_data.channel_group_add_channel({
 
 // subscribes to channel group
 pubnub_data.subscribe({
-    channel_group: "gameChannel_Group"
+    channel_group: "gameChannel_Group",
+    callback: function(m){
+        console.log("subscribe callback",m);
+    }
 })
+
+function getHistory(channel, count) {
+	console.log("Gets history");
+	//output.innerHTML = ''; //empties the div for the old channel
+	pubnub_data.history({
+	  channel: channel,
+	  count: count,
+	  callback: function(messages) {
+	    pubnub_data.each(messages[0], function(m) {
+	    	console.log(m);
+	    	//console.log(m.text.lng);
+	    });
+	  }
+	});
+};
+
+function publish(text,channel) {
+	if (!text) return;
+
+	 // PubNub Publish API
+	pubnub_data.publish({
+	  channel: channel,
+	  message: {
+	    text: text
+	  },
+	  callback: function(m) {
+	    console.log(m);
+	  }
+	});
+}
+
+//publish("Test3",'eggChannel');
+getHistory('eggChannel', 3);
+var KTH = {lat: 59.349877, lng: 18.070535};
+//publish(KTH,'eggChannel');
