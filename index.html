@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width">
     <meta charset="utf-8">
 
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-
     <!-- Chrome, Firefox OS and Opera -->
     <meta name="theme-color" content="PaleGoldenrod">
     <meta name="mobile-web-app-capable" content="yes">
@@ -30,8 +28,21 @@
           media="(device-width: 320px)
              and (-webkit-device-pixel-ratio: 2)"
           href="img/egg-app-icon.gif">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <!-- CSS style -->
+    <link rel="stylesheet" href="style.css">
+
+    
 </head>
 <body>
+
+	<div id="map"></div>
+
+	<!-- Include the PubNub Library -->
+	<script src="http://cdn.pubnub.com/pubnub-dev.js"></script>
+	<script src="pubnubCode.js"></script>
 </body>
 
 </html>
