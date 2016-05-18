@@ -41,5 +41,6 @@ startButt.addEventListener('click', function(){
   //game(usrAlias);
   setNewUUID(usrAlias);
   createEggs();
+  initialPosition();
   getLocation();
 });

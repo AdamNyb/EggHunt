@@ -137,6 +137,7 @@ function removeEgg(takenEgg) {
 			eggTitles.splice(i, 1);
 		}
 	}
+	getScoreboard();
 	pubnub_data.history({
 		channel: eggChannel,
 		count: 1,
@@ -190,7 +191,7 @@ function getScoreboard() {
 function addScore(scoreboard) {
 	//console.log("Let's rint out MY score");
 	//console.log(scoreboard[user.uuid]);
-	scoreboard[user.uuid] = scoreboard[user.uuid] + 1;
+	scoreboard[user.uuid] = Number(scoreboard[user.uuid]) + 1;
 	//console.log("MY NEW score");
 	//console.log(scoreboard[user.uuid]);
 	publish(scoreboard,scoreChannel);

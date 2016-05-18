@@ -4,7 +4,7 @@ function createEggs(){
 
   //markers = [];
   //console.log("eggs", eggs);
-  for (i = 0; i < randomPositions.length; i ++) {
+  for (var i = 0; i < randomPositions.length; i ++) {
     eggName = "egg" + String(i);
     var egg = new google.maps.Marker({
       position: {lat: randomPositions[i][0], lng: randomPositions[i][1]},
@@ -24,7 +24,7 @@ function createEggs(){
 
 var randomEggs = function() {
   randomPositions = [];
-  for (i = 0; i < 7; i ++) {
+  for (var i = 0; i < 7; i ++) {
     var r = 150/111300, // = 100 meters
         y0 = 59.3475983,
         x0 = 18.073206,
@@ -43,21 +43,39 @@ var randomEggs = function() {
   return randomPositions;
 }
 
-function createPlayerMarker(currentPos){
+function createPlayerMarker(initialPos){
   console.log(currentPos)
     var marker = new google.maps.Marker({
       position: currentPos,
       map: map,
-      title: 'Not draggable!',
+      title: 'Your position',
       animation: google.maps.Animation.DROP,
-      found: false
     });
+}
+
+var updatePlayerMarker = function(currenPos) {
+  console.log("update");
+  marker.setPosition(currentPos);
+}
+
+var initialPosition = function() {
+  if (navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      function(position){
+        var initialPos = {
+          lat: position.coords.latitude,
+          lng : position.coords.longitude
+        };
+        createPlayerMarker(initialPos);
+      });
+  }
 }
 
 var getLocation = function(){
   console.log("YEAH");
+
   if (navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(
+    navigator.geolocation.watchPosition(
       function(position){
         var currentPos = {
           lat: position.coords.latitude,
@@ -65,14 +83,15 @@ var getLocation = function(){
         };
 
         console.log('abc'+currentPos);
-        createPlayerMarker(currentPos);
+        updatePlayerMarker(currentPos);
+
         //return currentPos;
+        userDistance(position.coords.latitude, position.coords.longitude);
       }/*,
       function(error){
         console.log('Error: ',error);
       }*/
     )
-    userDistance(position.coords.latitude, position.coords.longitude);
   }
 }
 
@@ -85,7 +104,7 @@ function userDistance(userLat, userLng) {
   //for (i = 0; i < userPositions.length; i++) {
   //console.log("markers[i]", markers[i].position.lat());
   console.log("egglängd", eggs.length);
-  for (j = 0; j < eggs.length; j ++) {
+  for (var j = 0; j < eggs.length; j ++) {
     console.log("userDistance");
     var eggLat = eggs[j].position.lat();
     var eggLng = eggs[j].position.lng();
@@ -109,7 +128,7 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var distance = R * c;
   console.log("distance:", distance);
 
-  if (distance < 10) {
+  if (distance < 100) {
     console.log("SHORT DISTANCE!!!");
     console.log("egg title", eggTitle);
     removeEgg(eggTitle);
