@@ -6,6 +6,7 @@ var squirtlePos1 = KTH;
 var squirtlePos2 = {lat: 59.361162, lng: 18.034083};
 var map;
 
+
 // initializes the map
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -15,6 +16,7 @@ function initMap() {
     disableDefaultUI:true
   });
   map.setTilt(45);
+
 
   // creates the other controls
   createMarkers();
@@ -38,23 +40,24 @@ function createMarkers(){
   });
 }
 
-var getLocation = function(map){
-  if (navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(
-      function(position){
-        var currentPos = {
-          lat: position.coords.latitude,
-          lng : position.coords.longitude
+ var getLocation = function(){
+        if (navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(
+            function(position){
+              var currentPos = {
+                lat: position.coords.latitude,
+                lng : position.coords.longitude
 
-        };
-        map.setCenter(currentPos);
-        console.log(lat)
-        return currentPos;
-      }/*,
-      function(error){
-        console.log('Error: ',error);
-      }*/)
-  }
+              };
+              
+              console.log('abc'+currentPos)
+              return currentPos;
+            }/*,
+            function(error){
+              console.log('Error: ',error);
+            }*/)
+        }
+      }
 
 var rad = function(x) {
   return x * Math.PI / 180;
@@ -70,7 +73,7 @@ var getDistance = function(p1Lat, p1Lng, p2Lat, p2Lng) {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
   var distance = getDistance(sq1Lat, sq1Lng, sq2Lat, sq2Lng).toFixed(2)
-  return distance// returns the distance in meter
-};
+  return distance; // returns the distance in meter
+  };
 
-
+getLocation()
