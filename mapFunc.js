@@ -43,24 +43,37 @@ var randomEggs = function() {
   return randomPositions;
 }
 
+function createPlayerMarker(currentPos){
+  console.log(currentPos)
+    var marker = new google.maps.Marker({
+      position: currentPos,
+      map: map,
+      title: 'Not draggable!',
+      animation: google.maps.Animation.DROP,
+      found: false
+    });
+}
+
 var getLocation = function(){
+  console.log("YEAH");
   if (navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
       function(position){
         var currentPos = {
           lat: position.coords.latitude,
           lng : position.coords.longitude
-
         };
 
-        console.log('abc'+currentPos)
-        return currentPos;
+        console.log('abc'+currentPos);
+        createPlayerMarker(currentPos);
+        //return currentPos;
       }/*,
       function(error){
         console.log('Error: ',error);
-      }*/)
+      }*/
+    )
+    userDistance(position.coords.latitude, position.coords.longitude);
   }
-  userDistance(59.3475983, 18.073206);
 }
 
 var rad = function(x) {

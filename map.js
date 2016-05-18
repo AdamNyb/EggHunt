@@ -40,4 +40,5 @@ startButt.addEventListener('click', function(){
   console.log(usrAlias);
   game(usrAlias);
   createEggs();
+  getLocation();
 });
