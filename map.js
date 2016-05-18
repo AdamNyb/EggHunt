@@ -1,17 +1,16 @@
 // some locations
 var Sthlm = {lat: 59.332595, lng: 18.065193};
 var Sthlm2 = {lat: 59.329339, lng: 18.068701};
-var KTH = {lat: 59.349877, lng: 18.070535};
-var squirtlePos1 = KTH;
-var squirtlePos2 = {lat: 59.361162, lng: 18.034083};
+var KTH = {lat: 59.346667, lng: 18.0702473};
+var newPlace = {lat: 59.3475983, lng: 18.073206};
 var map;
 
 
 // initializes the map
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    center: Sthlm2,
-    zoom: 16,
+    center: newPlace,
+    zoom: 17,
     mapTypeId: google.maps.MapTypeId.HYBRID, // sets the map type
     disableDefaultUI:true
   });
@@ -24,20 +23,43 @@ function initMap() {
 
 // creates markers
 function createMarkers(){
-  var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-  var marker1 = new google.maps.Marker({
-    position: Sthlm,
-    map: map,
-    title: 'Not draggable!',
-    animation: google.maps.Animation.DROP
-  });
-  var marker2 = new google.maps.Marker({
-    position: Sthlm2,
-    map: map,
-    title: 'Draggable!',
-    draggable: true,
-    animation: google.maps.Animation.BOUNCE
-  });
+  randomPositions = randomMarkers();
+  markers = [];
+  console.log("markers", markers);
+  for (i = 0; i < randomPositions.length; i ++) {
+    marker = "marker" + String(i);
+    var marker = new google.maps.Marker({
+      position: {lat: randomPositions[i][0], lng: randomPositions[i][1]},
+      map: map,
+      title: 'Not draggable!',
+      animation: google.maps.Animation.DROP,
+      icon: 'img/egg-app-icon.gif',
+      found: false
+    });
+    markers.push(marker);
+  }
+  console.log("markers", markers);
+}
+
+var randomMarkers = function() {
+  randomPositions = [];
+  for (i = 0; i < 7; i ++) {
+    var r = 150/111300, // = 100 meters
+        y0 = 59.3475983,
+        x0 = 18.073206,
+        u = Math.random(),
+        v = Math.random(),
+        w = r * Math.sqrt(u),
+        t = 2 *  Math.PI * v,
+        x = w * Math.cos(t),
+        y1 = w * Math.sin(t),
+        x1 = x / Math.cos(y0)
+        newY = y0 + y1
+        newX = x0 + x1
+        randomPositions.push([newY, newX])
+  }
+  console.log("random", randomPositions); 
+  return randomPositions;
 }
 
  var getLocation = function(){
