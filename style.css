@@ -4,6 +4,7 @@ body, html {
 	margin: 0;
 
 }
+@font-face { font-family: sketch; src: url('DENNE-SKETCHY.ttf'); }
 
 #map {
 	width: 100%;
@@ -31,7 +32,8 @@ body, html {
 
 #bannerText{
 	text-align: center;
-	font-size: 30px !important;
+	font-size: 40px !important;
+	font-family: sketch;
 }
 .form{
 	position: fixed;
@@ -58,4 +60,24 @@ body, html {
 	transform: translateY(-50%);
 	text-align: center;
 	left: 58px;
+}
+#gameUI{
+	display: none;
+
+}
+
+#score{
+	z-index: 3;
+	position: fixed;
+	left: 5%;
+	bottom: 10%;
+	text-align: center;
+}
+#score > text{
+	font-size: 40px;
+	font-family: sketch;
+	-webkit-text-fill-color: #9de6e1; /* Will override color (regardless of order) */
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: #3b6668;
+
 }

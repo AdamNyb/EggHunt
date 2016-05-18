@@ -81,4 +81,5 @@ getLocation()
 var startButt = document.getElementById("startButt");
   startButt.addEventListener('click', function(){
     document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);");
-});
+    document.getElementById("gameUI").setAttribute("style", "display:block");
+  });
