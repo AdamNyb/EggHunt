@@ -1,3 +1,4 @@
+
 // some locations
 var Sthlm = {lat: 59.332595, lng: 18.065193};
 var Sthlm2 = {lat: 59.329339, lng: 18.068701};
@@ -49,7 +50,7 @@ function createMarkers(){
                 lng : position.coords.longitude
 
               };
-              
+
               console.log('abc'+currentPos)
               return currentPos;
             }/*,
@@ -77,3 +78,7 @@ var getDistance = function(p1Lat, p1Lng, p2Lat, p2Lng) {
   };
 
 getLocation()
+var startButt = document.getElementById("startButt");
+  startButt.addEventListener('click', function(){
+    document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);");
+});
