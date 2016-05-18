@@ -1,3 +1,8 @@
+var eggChannel = 'eggChannel';
+var scoreChannel = 'scoreChannel';
+var positionChannel = 'positionChannel';
+var gameChannel_Group = 'gameChannel_Group';
+
 function game(usrAlias) {
 
 	function generateUUID(usrAlias) {
@@ -24,10 +29,7 @@ function game(usrAlias) {
 		}
 	});
 
-	var eggChannel = 'eggChannel';
-	var scoreChannel = 'scoreChannel';
-	var positionChannel = 'positionChannel';
-	var gameChannel_Group = 'gameChannel_Group';
+	
 
 	// creates channel group
 	pubnub_data.channel_group_add_channel({
