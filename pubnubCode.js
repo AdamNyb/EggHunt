@@ -178,11 +178,6 @@ var scoreboard2 = {
 scoreboard2.user1 = 1;
 console.log(scoreboard2);
 
-function addScore() {
-	//no
-}
-
-
 
 function getScoreboard() {
 	pubnub_data.history({
@@ -191,8 +186,24 @@ function getScoreboard() {
 		callback: function(history) {
 			var scoreboard = history[0][0].text;
 			console.log("SCore history: ",scoreboard);
+			addScore(scoreboard);
 		}
 	})
+}
+
+function addScore(scoreboard) {
+	//console.log("Let's rint out MY score");
+	//console.log(scoreboard[myUUID]);
+	scoreboard[myUUID] = scoreboard[myUUID] + 1;
+	//console.log("MY NEW score");
+	//console.log(scoreboard[myUUID]);
+	publish(scoreboard,scoreChannel);
+	updateMyScore(scoreboard);
+}
+
+function updateMyScore(scoreboard) {
+	var myScore = document.getElementById('myScore');
+	myScore.innerHTML = scoreboard[myUUID];
 }
 
 getScoreboard();
