@@ -1,80 +1,90 @@
-function generateUUID() {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (d + Math.random()*16)%16 | 0;
-        d = Math.floor(d/16);
-        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-    });
-    //return uuid;
-    return 'Emma';
-};
+function game(usrAlias) {
 
-myUUID = generateUUID();
+	function generateUUID(usrAlias) {
+	    var d = new Date().getTime();
+	    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	        var r = (d + Math.random()*16)%16 | 0;
+	        d = Math.floor(d/16);
+	        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+	    });
+	    return usrAlias+uuid;
+	    //return 'Emma';
+	};
 
-var pubnub_data = PUBNUB.init({ // initializes pubnub
-	publish_key: 'pub-c-bf94e267-7c61-4c6d-b237-727f398f655d',
-	subscribe_key: 'sub-c-237e52d0-1b4c-11e6-be83-0619f8945a4f',
-	uuid: myUUID
-});
+	var user = {};
+	user.uuid = generateUUID(usrAlias);
+	user.alias = usrAlias;
 
-var eggChannel = 'eggChannel';
-var scoreChannel = 'scoreChannel';
-var positionChannel = 'positionChannel';
-var gameChannel_Group = 'gameChannel_Group';
+	var pubnub_data = PUBNUB.init({ // initializes pubnub
+		publish_key: 'pub-c-bf94e267-7c61-4c6d-b237-727f398f655d',
+		subscribe_key: 'sub-c-237e52d0-1b4c-11e6-be83-0619f8945a4f',
+		uuid: user.uuid,
+		state: {
+			"alias" : user.alias
+		}
+	});
 
-// creates channel group
-pubnub_data.channel_group_add_channel({
-    channel: eggChannel,
-    channel_group: gameChannel_Group
-});
-pubnub_data.channel_group_add_channel({
-    channel: scoreChannel,
-    channel_group: gameChannel_Group
-});
-pubnub_data.channel_group_add_channel({
-    channel: positionChannel,
-    channel_group: gameChannel_Group
-});
+	var eggChannel = 'eggChannel';
+	var scoreChannel = 'scoreChannel';
+	var positionChannel = 'positionChannel';
+	var gameChannel_Group = 'gameChannel_Group';
 
-var uuids = [];
-var scoreboard = {};
+	// creates channel group
+	pubnub_data.channel_group_add_channel({
+	    channel: eggChannel,
+	    channel_group: gameChannel_Group
+	});
+	pubnub_data.channel_group_add_channel({
+	    channel: scoreChannel,
+	    channel_group: gameChannel_Group
+	});
+	pubnub_data.channel_group_add_channel({
+	    channel: positionChannel,
+	    channel_group: gameChannel_Group
+	});
+
+	var uuids = [];
+	var scoreboard = {};
 
 
-// subscribes to channel group
-pubnub_data.subscribe({
-    channel_group: gameChannel_Group,
-    callback: function(m){
-        //console.log("subscribe callback",m);
-    }
-});
-// Get List of Occupants and Occupancy Count.
-pubnub_data.here_now({
-    channel_group : gameChannel_Group,
-    callback : function(m){
-    	console.log("HELLO");
-        console.log(m);
-    }
-});	
+	// subscribes to channel group
+	pubnub_data.subscribe({
+	    channel_group: gameChannel_Group,
+	    callback: function(m){
+	        //console.log("subscribe callback",m);
+	    }
+	});
+	// Get List of Occupants and Occupancy Count.
+	pubnub_data.here_now({
+	    channel_group : gameChannel_Group,
+	    callback : function(m){
+	    	console.log("HELLO");
+	        console.log(m);
+	    }
+	});	
 
-// pubnub_data.subscribe({
-// 	channel: eggChannel,
-// 	//noheresync: true,
-// 	message: function(m){
-// 		console.log("Message");
-// 		console.log(m);
-// 	},
-// 	presence: function(m) {
-// 		//console.log("presence");
-// 		if (m.action == 'join') {
-// 			console.log("someone joined!");
-// 			console.log(m);
-// 			scoreboard[m.uuid] = 0;
-// 			publish(scoreboard,scoreChannel);
-// 		} else if (m.action == 'leave') {
-// 			console.log("someone left!");
-// 		}
-// 	}
-// });
+	// pubnub_data.subscribe({
+	// 	channel: eggChannel,
+	// 	//noheresync: true,
+	// 	message: function(m){
+	// 		console.log("Message");
+	// 		console.log(m);
+	// 	},
+	// 	presence: function(m) {
+	// 		//console.log("presence");
+	// 		if (m.action == 'join') {
+	// 			console.log("someone joined!");
+	// 			console.log(m);
+	// 			scoreboard[m.uuid] = 0;
+	// 			publish(scoreboard,scoreChannel);
+	// 		} else if (m.action == 'leave') {
+	// 			console.log("someone left!");
+	// 		}
+	// 	}
+	// });
+
+
+}
 
 function publish(text,channel) {
 	if (!text) return;
@@ -166,17 +176,8 @@ function updateEggPositions(takenEgg, oldPositions) {
 
 }
 
-removeEgg(Sthlm);
+//removeEgg(Sthlm);
 
-
-var scoreboard2 = {
-	user1: 0,
-	user2: 0,
-	user3: 0
-}
-//publish(scoreboard,scoreChannel);
-scoreboard2.user1 = 1;
-console.log(scoreboard2);
 
 
 function getScoreboard() {
@@ -193,17 +194,18 @@ function getScoreboard() {
 
 function addScore(scoreboard) {
 	//console.log("Let's rint out MY score");
-	//console.log(scoreboard[myUUID]);
-	scoreboard[myUUID] = scoreboard[myUUID] + 1;
+	//console.log(scoreboard[user.uuid]);
+	scoreboard[user.uuid] = scoreboard[user.uuid] + 1;
 	//console.log("MY NEW score");
-	//console.log(scoreboard[myUUID]);
+	//console.log(scoreboard[user.uuid]);
 	publish(scoreboard,scoreChannel);
 	updateMyScore(scoreboard);
 }
 
 function updateMyScore(scoreboard) {
 	var myScore = document.getElementById('myScore');
-	myScore.innerHTML = scoreboard[myUUID];
+	myScore.innerHTML = scoreboard[user.uuid];
 }
 
-getScoreboard();
+//getScoreboard();
+
