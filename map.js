@@ -135,8 +135,17 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
 
 //decideDistance, for user position {for egg position}
 
-getLocation()
+getLocation();
+
 var startButt = document.getElementById("startButt");
-  startButt.addEventListener('click', function(){
-    document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);");
+var usrAlias = document.getElementById("usrAlias");
+startButt.addEventListener('click', function(){
+  usrAlias = String(usrAlias.value);
+  if (usrAlias == "") {
+    usrAlias = 'Eggbert';
+  }
+  document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);");
+  document.getElementById("gameUI").setAttribute("style", "display:block");
+  console.log(usrAlias);
+  game(usrAlias);
 });
