@@ -1,3 +1,8 @@
+var eggChannel = 'eggChannel';
+var scoreChannel = 'scoreChannel';
+var positionChannel = 'positionChannel';
+var gameChannel_Group = 'gameChannel_Group';
+
 function game(usrAlias) {
 
 	function generateUUID(usrAlias) {
@@ -24,10 +29,7 @@ function game(usrAlias) {
 		}
 	});
 
-	var eggChannel = 'eggChannel';
-	var scoreChannel = 'scoreChannel';
-	var positionChannel = 'positionChannel';
-	var gameChannel_Group = 'gameChannel_Group';
+	
 
 	// creates channel group
 	pubnub_data.channel_group_add_channel({
@@ -140,7 +142,15 @@ function removeEgg(takenEgg) {
 
 	// if the eggs are marker objects, simply hide the marker:
 	//takenEgg.setVisible(false);
-
+	for (var i = 0; i < eggs.length; i ++) {
+		var currEgg = eggs[i];
+		console.log("curreEgg", currEgg);
+		if (currEgg.title == takenEgg) {
+			currEgg.setMap(null);
+			eggs.splice(i, 1);
+			eggTitles.splice(i, 1);
+		}
+	}
 	pubnub_data.history({
 		channel: eggChannel,
 		count: 1,
@@ -177,7 +187,6 @@ function updateEggPositions(takenEgg, oldPositions) {
 }
 
 //removeEgg(Sthlm);
-
 
 
 function getScoreboard() {
