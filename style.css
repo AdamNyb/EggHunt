@@ -98,17 +98,23 @@ body, html {
 }
 
 #score{
+	background: #5f9ea0;
+	width: 45%;
 	z-index: 3;
 	position: fixed;
-	left: 5%;
-	bottom: 10%;
-	text-align: center;
+	left: 0;
+	bottom: 40px;
+	padding-left: 10px;
+	border-radius: 0px 20px 20px 0px;
 }
 #score > text{
-	font-size: 40px;
+	font-size: 32px;
 	font-family: sketch !important;
-	-webkit-text-fill-color: #9de6e1; /* Will override color (regardless of order) */
-	-webkit-text-stroke-width: 1px;
-	-webkit-text-stroke-color: #3b6668;
+	color: #2c2c2c;
 
+}
+#score > text > span {
+	font-size: 44px !important;
+	font-family: sketch !important;
+	color: #2c2c2c;
 }
