@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <head>
 	<title>EggHunt</title>
-	<meta name="viewport" content="initial-scale=1.0">
+	<meta name="viewport" content="initial-scale=1., maximum-scale=1.0, user-scalable=n">
     <meta name="viewport" content="width=device-width">
     <meta charset="utf-8">
 
     <!-- Chrome, Firefox OS and Opera -->
-    <meta name="theme-color" content="PaleGoldenrod">
+    <meta name="theme-color" content="#9de6e1">
     <meta name="mobile-web-app-capable" content="yes">
     <!-- Windows Phone -->
-    <meta name="msapplication-navbutton-color" content="PaleGoldenrod">
+    <meta name="msapplication-navbutton-color" content="#9de6e1">
     <!-- iOS Safari -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#9de6e1">
 
     <link rel="icon" sizes="128x128" href="img/egg-app-icon.gif">
     <link rel="apple-touch-icon"
@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <!-- CSS style -->
     <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
 
     
 </head>
@@ -46,28 +47,32 @@
         </h2>-->
 
         <p>
-            THE GAME CAN BE STARTED WHEN 2 OR MORE PLAYERS ARE CLOSE TO EACH OTHER.
+            The game can be started when two or more players are close to each other.
+            <!--THE GAME CAN BE STARTED WHEN 2 OR MORE PLAYERS ARE CLOSE TO EACH OTHER.-->
         </p>
         <p>
-            THE OBJECTIVE OF THE GAME IS TO COLLECT AS MANY EGGS AS POSSIBLE BEFORE THE TIME IS UP, THE PLAYER WITH THE MOST POINTS WINS.
+            The objective of the game is to collect as many eggs as possible before the time is up, the player with the most points wins.
+            <!--THE OBJECTIVE OF THE GAME IS TO COLLECT AS MANY EGGS AS POSSIBLE BEFORE THE TIME IS UP, THE PLAYER WITH THE MOST POINTS WINS.-->
         </p>
         <p>
-            TO COLLECT AN EGG YOU JUST HAVE TO MOVE YOURSELF (AND YOUR PHONE) TO THE EGG'S COORDINATES.
+            To collect an egg you just have to move yourself (and your phone) to the egg's coordinates.
+            <!--TO COLLECT AN EGG YOU JUST HAVE TO MOVE YOURSELF (AND YOUR PHONE) TO THE EGG'S COORDINATES.-->
         </p>
         <form role="form">
             <div class="form">
                 <label for="usrAlias">Your alias</label>
                 <input type="text" class="form-control" id="usrAlias" placeholder="Eggbert">
             </div>
-            <div id="startButt">
-                <img type="submit" id="startImg" src="img/egg-app-icon.gif"/>
+            <div type="submit" id="startButt">
+               <text>START GAME!</text>
+                <!--<img type="submit" id="startImg" src="img/egg-app-icon.gif"/>-->
             </div>
         </form>
     </div>
 
     <div id="gameUI">
         <div id="score">
-            <text>Score: <span id="myScore"></span></text>
+            <text>Score: <span id="myScore">0</span></text>
         </div>
     </div>
 
