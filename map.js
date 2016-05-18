@@ -5,6 +5,8 @@ var Sthlm2 = {lat: 59.329339, lng: 18.068701};
 var KTH = {lat: 59.346667, lng: 18.0702473};
 var newPlace = {lat: 59.3475983, lng: 18.073206};
 var map;
+var eggs = [];
+var eggTitles = [];
 
 
 // initializes the map
@@ -19,30 +21,36 @@ function initMap() {
 
 
   // creates the other controls
-  createMarkers();
+  createEggs();
+  userDistance(59.3475983, 18.073206);
+
 }
 
 // creates markers
-function createMarkers(){
-  randomPositions = randomMarkers();
-  markers = [];
-  console.log("markers", markers);
+function createEggs(){
+  randomPositions = randomEggs();
+
+  //markers = [];
+  //console.log("eggs", eggs);
   for (i = 0; i < randomPositions.length; i ++) {
-    marker = "marker" + String(i);
-    var marker = new google.maps.Marker({
+    eggName = "egg" + String(i);
+    var egg = new google.maps.Marker({
       position: {lat: randomPositions[i][0], lng: randomPositions[i][1]},
       map: map,
-      title: 'Not draggable!',
+      title: eggName,
       animation: google.maps.Animation.DROP,
       icon: 'img/egg-app-icon.gif',
-      found: false
     });
-    markers.push(marker);
+    //console.log("one egg title", egg.title);
+    eggs.push(egg);
+    eggTitles.push(egg.title);
+
   }
-  console.log("markers", markers);
+  //console.log("eggs", eggs);
+  publish(eggTitles, eggChannel);
 }
 
-var randomMarkers = function() {
+var randomEggs = function() {
   randomPositions = [];
   for (i = 0; i < 7; i ++) {
     var r = 150/111300, // = 100 meters
@@ -86,18 +94,46 @@ var rad = function(x) {
   return x * Math.PI / 180;
 };
 
-var getDistance = function(p1Lat, p1Lng, p2Lat, p2Lng) {
+function userDistance(userLat, userLng) {
+  //console.log("userDistanceMarkers", markers);
+  //for (i = 0; i < userPositions.length; i++) {
+  //console.log("markers[i]", markers[i].position.lat());
+  console.log("egglängd", eggs.length);
+  for (j = 0; j < eggs.length; j ++) {
+    console.log("userDistance");
+    var eggLat = eggs[j].position.lat();
+    var eggLng = eggs[j].position.lng();
+    
+    var eggTitle = eggs[j].title; //egg "object" in eggs that is chosen
+    getDistance(userLat, userLng, eggLat, eggLng, eggTitle);
+    
+  }
+  //}
+};
+
+
+var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var R = 6378137; // Earth’s mean radius in meter
-  var dLat = rad(p2Lat - p1Lat);
-  var dLong = rad(p2Lng - p1Lng);
+  var dLat = rad(eggLat - userLat);
+  var dLong = rad(eggLng - userLng);
   var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(rad(p1Lat) * Math.cos(rad(p2Lat))) *
+    Math.cos(rad(userLat) * Math.cos(rad(eggLat))) *
     Math.sin(dLong / 2) * Math.sin(dLong / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c;
-  var distance = getDistance(sq1Lat, sq1Lng, sq2Lat, sq2Lng).toFixed(2)
-  return distance; // returns the distance in meter
-  };
+  var distance = R * c;
+  console.log("distance:", distance);
+
+  if (distance < 10) {
+    console.log("SHORT DISTANCE!!!");
+    console.log("egg title", eggTitle);
+    removeEgg(eggTitle);
+  }
+
+  //var distance = getDistance(sq1Lat, sq1Lng, sq2Lat, sq2Lng).toFixed(2)
+  //return distance; // returns the distance in meter
+};
+
+//decideDistance, for user position {for egg position}
 
 getLocation()
 var startButt = document.getElementById("startButt");
