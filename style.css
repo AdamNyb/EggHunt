@@ -2,9 +2,60 @@ body, html {
 	width: 100%;
 	height: 100%;
 	margin: 0;
+
 }
 
 #map {
 	width: 100%;
 	height: 100%;
+	position: fixed;
+	z-index: 0;
+
+}
+#banner{
+	background: #9de6e1;
+	height: 3.63636364em;
+	position: fixed;
+	top:0;
+	left:0;
+	z-index: 3;
+}
+#startScreen{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background: #5f9ea0;
+}
+
+
+#bannerText{
+	text-align: center;
+	font-size: 30px !important;
+}
+.form{
+	position: fixed;
+	top: 45%;
+	left: 15%;
+	width: 70%;
+	height: 2.5em;
+	padding-left: 5%;
+}
+#startButt{
+	position: fixed;
+	top: 60%;
+	left: 30%;
+	width: 45%;
+	height: 161px;
+
+	background: rgba(50, 101, 103, 0.5);
+	border-radius: 50%;
+	text-align: center;
+}
+#startImg{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	text-align: center;
+	left: 58px;
 }
