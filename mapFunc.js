@@ -46,6 +46,8 @@ var randomEggs = function() {
 var initialPosition = function() {
   console.log('initialPosition()')
   if (navigator.geolocation){
+  
+}
     navigator.geolocation.getCurrentPosition(
       function(position){
         initialPos = {
@@ -139,10 +141,18 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var distance = R * c;
   //console.log("distance:", distance);
 
+var vibrate = function(){
+  if (navigator.vibrate) {
+    navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+    navigator.vibrate(1000)
+ 
+}
+
   if (distance < 15) {
     //console.log("SHORT DISTANCE!!!");
     //console.log("egg title", eggTitle);
     removeEgg(eggTitle);
+    vibrate();
   }
 
   //var distance = getDistance(sq1Lat, sq1Lng, sq2Lat, sq2Lng).toFixed(2)
