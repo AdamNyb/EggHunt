@@ -59,26 +59,50 @@ pubnub_data.channel_group_add_channel({
     channel: positionChannel,
     channel_group: gameChannel_Group
 });
-pubnub_data.channel_group_add_channel({
-    channel: readyChannel,
-    channel_group: gameChannel_Group
-});
 
 
-// subscribes to channel group
+// // subscribes to channel group
+// pubnub_data.subscribe({
+//     channel_group: gameChannel_Group,
+//     callback: function(m){
+//         //console.log("subscribe callback",m);
+//     }
+// });
+
 pubnub_data.subscribe({
-    channel_group: gameChannel_Group,
-    callback: function(m){
-        //console.log("subscribe callback",m);
-    }
+	channel: ['eggChannel','scoreChannel','positionChannel'],
+	callback: function(m) {}
 });
+
+pubnub_data.subscribe({
+	channel: readyChannel,
+	message: function(message){
+		console.log("READYMSG");
+		console.log(message.text);
+		if (gameStarted == false) {
+			if (message.text[0] == user.uuid) {
+				createEggs();
+			} else {
+				// look for already made eggs
+				pubnub_data.history({
+			      channel: eggChannel,
+			      count: 1,
+			      callback: function(history) {
+			      	placeEggs(history[0][0].text);
+			      }
+				});
+			}
+		}
+	}
+})
+publish("tom",readyChannel);
 
 // Get List of Occupants and Occupancy Count.
 pubnub_data.here_now({
 	channel_group: gameChannel_Group,
 	callback: function (m) {
 		console.log("HELLO");
-		console.log(m.total_occupancy);
+		console.log(m);
 		if (m.total_occupancy > 3) { //3 channels means number of players = m*3
 			gameReady();
 		}
@@ -111,6 +135,8 @@ pubnub_data.here_now({
 
 function publish(text,channel) {
 	if (!text) return;
+	console.log("I'm gonna post this:");
+	console.log(text);
 
 	 // PubNub Publish API
 	pubnub_data.publish({

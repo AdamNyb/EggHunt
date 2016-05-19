@@ -9,7 +9,9 @@ var eggs = [];
 var eggData = [];
 var marker;
 var initialPos;
+var readyPlayers = [];
 var playerReady = false;
+var gameStarted = false;
 
 
 // initializes the map
@@ -41,11 +43,14 @@ startButt.addEventListener('click', function(){
   if (usrAlias == "") {
     usrAlias = 'Eggbert';
   }
-  console.log(usrAlias);
+  //console.log(usrAlias);
   //game(usrAlias);
   setNewUUID(usrAlias);
   initialPosition();
   getLocation();
+  console.log("YOYO POST TO READY CHANNEL");
+  var readyPlayers = [];
+  
 
   if (startGame === true) { //make button clickable and stuff
     //hide startscreen
@@ -61,16 +66,27 @@ startButt.addEventListener('click', function(){
     publish(scoreboard,scoreChannel);
     playerReady = true;
 
+    console.log("YO READY?!");
     pubnub_data.history({
       channel: readyChannel,
       count: 1,
       callback: function(history) {
-        var scoreboard = history[0][0].text;
-        console.log("Ready history: ",scoreboard);
-        addScore(scoreboard);
+        console.log("READY HOSTPRYYYYYYYYYYYYY");
+        console.log(history[0][0].text);
+        if (history == undefined || history[0][0].text == "tom" || history[0][0] == undefined || history[0][0].text == undefined) {
+          var readyPlayers = []
+          readyPlayers.push(user.uuid);
+          publish(readyPlayers,readyChannel);
+        } else {
+          readyPlayers = history[0][0].text;
+          readyPlayers.push(user.uuid);
+          publish(readyPlayers,readyChannel);
+          console.log("Ready history: ",readyPlayers);
+        }
+
       }
     })
 
-    createEggs();
+    //createEggs();
   }
 });
