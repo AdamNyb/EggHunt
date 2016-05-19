@@ -46,8 +46,7 @@ var randomEggs = function() {
 var initialPosition = function() {
   console.log('initialPosition()')
   if (navigator.geolocation){
-  
-}
+
     navigator.geolocation.getCurrentPosition(
       function(position){
         initialPos = {
@@ -59,6 +58,7 @@ var initialPosition = function() {
         console.log('kör createPlayerMarker')
         createPlayerMarker(initialPos);
   }
+}
 
 
 
