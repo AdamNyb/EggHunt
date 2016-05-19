@@ -32,7 +32,7 @@ function initMap() {
 
 var startButt = document.getElementById("startButt");
 var usrAlias = document.getElementById("usrAlias");
-var startGame = false;
+var startGame = true;
 
 
 startButt.addEventListener('click', function(){
@@ -46,6 +46,7 @@ startButt.addEventListener('click', function(){
     console.log(usrAlias);
     //game(usrAlias);
     setNewUUID(usrAlias);
+    publish(scoreboard,scoreChannel);
     createEggs();
     initialPosition();
     getLocation();
