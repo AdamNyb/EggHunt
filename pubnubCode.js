@@ -1,6 +1,7 @@
 var eggChannel = 'eggChannel';
 var scoreChannel = 'scoreChannel';
 var positionChannel = 'positionChannel';
+var readyChannel = 'readyChannel';
 var gameChannel_Group = 'gameChannel_Group';
 var user = {};
 var scoreboard = {};
@@ -56,6 +57,10 @@ pubnub_data.channel_group_add_channel({
 });
 pubnub_data.channel_group_add_channel({
     channel: positionChannel,
+    channel_group: gameChannel_Group
+});
+pubnub_data.channel_group_add_channel({
+    channel: readyChannel,
     channel_group: gameChannel_Group
 });
 
