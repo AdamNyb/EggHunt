@@ -30,17 +30,22 @@ function initMap() {
 
 var startButt = document.getElementById("startButt");
 var usrAlias = document.getElementById("usrAlias");
+var startGame = false;
+
+
 startButt.addEventListener('click', function(){
-  usrAlias = String(usrAlias.value);
-  if (usrAlias == "") {
-    usrAlias = 'Eggbert';
+  if (startGame === true) { //make button clickable and stuff
+    usrAlias = String(usrAlias.value);
+    if (usrAlias == "") {
+      usrAlias = 'Eggbert';
+    }
+    document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);");
+    document.getElementById("gameUI").setAttribute("style", "display:block");
+    console.log(usrAlias);
+    //game(usrAlias);
+    setNewUUID(usrAlias);
+    createEggs();
+    initialPosition();
+    getLocation();
   }
-  document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);");
-  document.getElementById("gameUI").setAttribute("style", "display:block");
-  console.log(usrAlias);
-  //game(usrAlias);
-  setNewUUID(usrAlias);
-  createEggs();
-  initialPosition();
-  getLocation();
 });

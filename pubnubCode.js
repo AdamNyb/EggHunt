@@ -66,14 +66,19 @@ pubnub_data.subscribe({
         //console.log("subscribe callback",m);
     }
 });
+
 // Get List of Occupants and Occupancy Count.
 pubnub_data.here_now({
-    channel_group : gameChannel_Group,
-    callback : function(m){
-    	console.log("HELLO");
-        console.log(m);
-    }
-});	
+	channel_group: gameChannel_Group,
+	callback: function (m) {
+		console.log("HELLO");
+		console.log(m.total_occupancy);
+		if (m.total_occupancy > 3) { //3 channels means number of players = m*3
+			gameReady();
+		}
+	}
+});
+
 
 // pubnub_data.subscribe({
 // 	channel: eggChannel,
@@ -203,5 +208,20 @@ function updateMyScore(scoreboard) {
 	myScore.innerHTML = scoreboard[user.uuid];
 }
 
+function gameReady() {
+	startButt.innerHTML = '<text>START GAME!</text>';
+	startButt.setAttribute("style",
+		"position: fixed;"+
+		"bottom: 20px;"+
+		"left: 135px;"+
+		"width: 140px;"+
+		"height: 140px;"+
+		"background: rgba(50, 101, 103, 0.5);"+
+		"border-radius: 50%;"+
+		"text-align: center;"/*+
+		"border: 3px solid white;"*/
+	);
+	startGame = true;
+}
 //getScoreboard();
 

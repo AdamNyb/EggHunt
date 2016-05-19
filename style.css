@@ -3,7 +3,7 @@ body, html {
 	height: 100%;
 	margin: 0;
 	font-family: 'Roboto Condensed', sans-serif;
-	font-size: 22px;
+	font-size: 14x;
 
 }
 @font-face { font-family: sketch; src: url('img/DENNE-SKETCHY.ttf'); }
@@ -45,7 +45,7 @@ body, html {
 #startScreen > p{
 	position: relative;
 	top: 10%;
-	font-size: 22px;
+	font-size: 14px;
 	color: black;
 	text-align: center;
 }
@@ -85,6 +85,10 @@ body, html {
 	transform: translateY(-50%);
 	left: 20px;
 }
+#waiting{
+	left: 4px !important;
+}
+
 #startImg{
 	position: absolute;
 	top: 50%;
