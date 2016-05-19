@@ -34,18 +34,25 @@ var startGame = false;
 
 
 startButt.addEventListener('click', function(){
+  usrAlias = String(usrAlias.value);
+  if (usrAlias == "") {
+    usrAlias = 'Eggbert';
+  }
+  console.log(usrAlias);
+  //game(usrAlias);
+  setNewUUID(usrAlias);
+  initialPosition();
+  getLocation();
+
   if (startGame === true) { //make button clickable and stuff
-    usrAlias = String(usrAlias.value);
-    if (usrAlias == "") {
-      usrAlias = 'Eggbert';
-    }
-    document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);");
+    //hide startscreen
+    document.getElementById("startScreen").innerHTML = "";
+    document.getElementById("startScreen").setAttribute("style", "all: initial;*{all: unset;}");
+
+    document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
     document.getElementById("gameUI").setAttribute("style", "display:block");
-    console.log(usrAlias);
-    //game(usrAlias);
-    setNewUUID(usrAlias);
+
+    //add time before creating
     createEggs();
-    initialPosition();
-    getLocation();
   }
 });

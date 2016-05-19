@@ -34,6 +34,8 @@
     <!-- CSS style -->
     <link rel="stylesheet" href="style.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 
     
 </head>
@@ -58,21 +60,29 @@
             To collect an egg you just have to move yourself (and your phone) to the egg's coordinates.
             <!--TO COLLECT AN EGG YOU JUST HAVE TO MOVE YOURSELF (AND YOUR PHONE) TO THE EGG'S COORDINATES.-->
         </p>
-        <form role="form">
-            <div class="form">
-                <label for="usrAlias">Your alias</label>
-                <input type="text" class="form-control" id="usrAlias" placeholder="Eggbert">
+        <form role="form" class="col-xs-12">
+            <div class="form col-xs-12">
+                <label for="usrAlias" class="col-xs-12">Your alias</label>
+                <input type="text" class="form-control col-xs-12" id="usrAlias" placeholder="Eggbert">
             </div>
-            <div type="submit" id="startButt">
-                <text id="waiting">WAITING FOR PLAYER</text>
+            <div id="startButt">
+                <text>READY!</text>
                 <!--<img type="submit" id="startImg" src="img/egg-app-icon.gif"/>-->
             </div>
+
         </form>
     </div>
 
     <div id="gameUI">
         <div id="score">
             <text>Score: <span id="myScore">0</span></text>
+        </div>
+        <div id="waiting">
+            <div>
+                <p>
+                    Waiting for other players...
+                </p>
+            </div>
         </div>
     </div>
 
