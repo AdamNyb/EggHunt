@@ -39,40 +39,45 @@ var randomEggs = function() {
         newX = x0 + x1
         randomPositions.push([newY, newX])
   }
-  console.log("random", randomPositions); 
+  //console.log("random", randomPositions); 
   return randomPositions;
 }
 
-function createPlayerMarker(initialPos){
-  console.log(currentPos)
-    var marker = new google.maps.Marker({
-      position: currentPos,
-      map: map,
-      title: 'Your position',
-      animation: google.maps.Animation.DROP,
-    });
-}
-
-var updatePlayerMarker = function(currenPos) {
-  console.log("update");
-  marker.setPosition(currentPos);
-}
-
 var initialPosition = function() {
+  console.log('initialPosition()')
   if (navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
       function(position){
-        var initialPos = {
+        initialPos = {
           lat: position.coords.latitude,
           lng : position.coords.longitude
-        };
-        createPlayerMarker(initialPos);
+        }
+        
       });
+        console.log('kör createPlayerMarker')
+        createPlayerMarker(initialPos);
   }
 }
 
+
+var createPlayerMarker=function(initialPos){
+  console.log('creating initial marker')
+  marker = new google.maps.Marker({
+    position: initialPos,
+    map: map,
+    title: 'Your position',
+    animation: google.maps.Animation.DROP
+  });
+  
+    
+}
+
+
+
+
 var getLocation = function(){
-  console.log("YEAH");
+  console.log('getLocation()')
+  
 
   if (navigator.geolocation){
     navigator.geolocation.watchPosition(
@@ -82,7 +87,7 @@ var getLocation = function(){
           lng : position.coords.longitude
         };
 
-        console.log('abc'+currentPos);
+        
         updatePlayerMarker(currentPos);
 
         //return currentPos;
@@ -95,17 +100,23 @@ var getLocation = function(){
   }
 }
 
+var updatePlayerMarker = function(currentPos) {
+  console.log("updatePlayerMarker()");
+  console.log("currentPos", currentPos);
+  marker.setPosition(currentPos);
+}
+
 var rad = function(x) {
   return x * Math.PI / 180;
 };
 
-function userDistance(userLat, userLng) {
+var userDistance = function(userLat, userLng) {
   //console.log("userDistanceMarkers", markers);
   //for (i = 0; i < userPositions.length; i++) {
   //console.log("markers[i]", markers[i].position.lat());
-  console.log("egglängd", eggs.length);
+  //console.log("egglängd", eggs.length);
   for (var j = 0; j < eggs.length; j ++) {
-    console.log("userDistance");
+    //console.log("userDistance");
     var eggLat = eggs[j].position.lat();
     var eggLng = eggs[j].position.lng();
     
@@ -126,11 +137,11 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
     Math.sin(dLong / 2) * Math.sin(dLong / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
-  console.log("distance:", distance);
+  //console.log("distance:", distance);
 
-  if (distance < 100) {
-    console.log("SHORT DISTANCE!!!");
-    console.log("egg title", eggTitle);
+  if (distance < 15) {
+    //console.log("SHORT DISTANCE!!!");
+    //console.log("egg title", eggTitle);
     removeEgg(eggTitle);
   }
 

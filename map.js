@@ -7,6 +7,8 @@ var newPlace = {lat: 59.3475983, lng: 18.073206};
 var map;
 var eggs = [];
 var eggTitles = [];
+var marker;
+var initialPos;
 
 
 // initializes the map
