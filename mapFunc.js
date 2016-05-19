@@ -15,11 +15,11 @@ function createEggs(){
     });
     //console.log("one egg title", egg.title);
     eggs.push(egg);
-    eggTitles.push(egg.title);
+    eggData.push(egg.title, egg.position);
 
   }
   //console.log("eggs", eggs);
-  publish(eggTitles, eggChannel);
+  publish(eggData, eggChannel);
 }
 
 var randomEggs = function() {
@@ -46,8 +46,7 @@ var randomEggs = function() {
 var initialPosition = function() {
   console.log('initialPosition()')
   if (navigator.geolocation){
-  
-}
+
     navigator.geolocation.getCurrentPosition(
       function(position){
         initialPos = {
@@ -59,6 +58,7 @@ var initialPosition = function() {
         console.log('kör createPlayerMarker')
         createPlayerMarker(initialPos);
   }
+}
 
 
 

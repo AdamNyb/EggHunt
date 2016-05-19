@@ -6,7 +6,7 @@ var KTH = {lat: 59.346667, lng: 18.0702473};
 var newPlace = {lat: 59.3475983, lng: 18.073206};
 var map;
 var eggs = [];
-var eggTitles = [];
+var eggData = [];
 var marker;
 var initialPos;
 var playerReady = false;
