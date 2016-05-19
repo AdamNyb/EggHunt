@@ -6,7 +6,9 @@ var KTH = {lat: 59.346667, lng: 18.0702473};
 var newPlace = {lat: 59.3475983, lng: 18.073206};
 var map;
 var eggs = [];
-var eggTitles = [];
+var eggData = [];
+var marker;
+var initialPos;
 
 
 // initializes the map
@@ -30,7 +32,7 @@ function initMap() {
 
 var startButt = document.getElementById("startButt");
 var usrAlias = document.getElementById("usrAlias");
-var startGame = false;
+var startGame = true;
 
 
 startButt.addEventListener('click', function(){
@@ -52,7 +54,10 @@ startButt.addEventListener('click', function(){
     document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
     document.getElementById("gameUI").setAttribute("style", "display:block");
 
-    //add time before creating
+    console.log(usrAlias);
+    //game(usrAlias);
+    setNewUUID(usrAlias);
+    publish(scoreboard,scoreChannel);
     createEggs();
   }
 });
