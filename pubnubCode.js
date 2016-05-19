@@ -219,15 +219,6 @@ function updateMyScore(scoreboard) {
 }
 
 function gameReady() {
-	//startButt.innerHTML = '<text>START GAME!</text>';
-	/*startButt.setAttribute("style",
-		"width: 140px;"+
-		"height: 140px;"+
-		"background: rgba(50, 101, 103, 0.5);"+
-		"border-radius: 50%;"+
-		"text-align: center;"/*+
-		"border: 3px solid white;"
-	);*/
 	startGame = true;
 }
 //getScoreboard();

@@ -61,7 +61,7 @@ form{
 	position: absolute;
 	width: 140px;
 	height: 140px;
-	top: 59px;
+	top: 69px;
 	left: 50%;
 	margin-left: -70px;
 	background: rgba(50, 101, 103, 0.5);
@@ -109,18 +109,22 @@ form{
 #waiting{
 	width: 100%;
 	top: 30%;
-	left: 40%;
 	position: fixed;
-	background: cadetblue;
+	z-index: 3;
+	text-align: center;
 }
 #waiting > div{
+	width: 40%;
 	position: relative;
 	display: table-cell;
 }
-#waiting > p{
-	font-family: heart !important;
+#waiting > div > p{
+	font-family: sketch !important;
+	color: white;
 	vertical-align: middle;
 	text-align: center;
 	display: table-cell;
-	font-size: 30px;
+	font-size: 60px;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: black;
 }
