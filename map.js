@@ -9,6 +9,7 @@ var eggs = [];
 var eggTitles = [];
 var marker;
 var initialPos;
+var playerReady = false;
 
 
 // initializes the map
@@ -47,6 +48,18 @@ startButt.addEventListener('click', function(){
     //game(usrAlias);
     setNewUUID(usrAlias);
     publish(scoreboard,scoreChannel);
+    playerReady = true;
+
+    pubnub_data.history({
+      channel: readyChannel,
+      count: 1,
+      callback: function(history) {
+        var scoreboard = history[0][0].text;
+        console.log("Ready history: ",scoreboard);
+        addScore(scoreboard);
+      }
+    })
+
     createEggs();
     initialPosition();
     getLocation();
