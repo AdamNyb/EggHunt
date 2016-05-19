@@ -195,8 +195,12 @@ function getScoreboard() {
 }
 
 function addScore(scoreboard) {
-	//console.log("Let's rint out MY score");
-	//console.log(scoreboard[user.uuid]);
+	console.log("Let's rint out MY score");
+	console.log(scoreboard);
+	console.log(scoreboard[user.uuid]);
+	if (scoreboard[user.uuid] == null ) {
+		scoreboard[user.uuid] = 0;
+	}
 	scoreboard[user.uuid] = Number(scoreboard[user.uuid]) + 1;
 	//console.log("MY NEW score");
 	//console.log(scoreboard[user.uuid]);
@@ -225,4 +229,3 @@ function gameReady() {
 	startGame = true;
 }
 //getScoreboard();
-
