@@ -22,6 +22,28 @@ function createEggs(){
   publish(eggData, eggChannel);
 }
 
+function placeEggs(positions){
+ 
+  //markers = [];
+  //console.log("eggs", eggs);
+  for (var i = 0; i < positions.length; i +2) {
+    eggName = positions[i];
+    var egg = new google.maps.Marker({
+      position: {lat: positions[i+1].lat(), lng: positions[i+1].lng()},
+      map: map,
+      title: eggName,
+      animation: google.maps.Animation.DROP,
+      icon: 'img/egg-app-icon.gif',
+    });
+    //console.log("one egg title", egg.title);
+    eggs.push(egg);
+    eggData.push(egg.title, egg.position);
+
+  }
+  //console.log("eggs", eggs);
+  //publish(eggData, eggChannel);
+}
+
 var randomEggs = function() {
   randomPositions = [];
   for (var i = 0; i < 7; i ++) {
