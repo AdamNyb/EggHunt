@@ -66,7 +66,8 @@ var createPlayerMarker=function(initialPos){
     position: initialPos,
     map: map,
     title: 'Your position',
-    animation: google.maps.Animation.DROP
+    animation: google.maps.Animation.DROP,
+    icon: 'img/locationMarker.png'
   });
   
     
