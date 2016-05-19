@@ -3,6 +3,7 @@ var scoreChannel = 'scoreChannel';
 var positionChannel = 'positionChannel';
 var gameChannel_Group = 'gameChannel_Group';
 var user = {};
+var scoreboard = {};
 
 
 var pubnub_data = PUBNUB.init({ // initializes pubnub
