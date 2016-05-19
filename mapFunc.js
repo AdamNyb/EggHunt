@@ -59,7 +59,7 @@ var initialPosition = function() {
         console.log('kör createPlayerMarker')
         createPlayerMarker(initialPos);
   }
-}
+
 
 
 var createPlayerMarker=function(initialPos){
@@ -141,6 +141,7 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
   //console.log("distance:", distance);
+}
 
 var vibrate = function(){
   if (navigator.vibrate) {
