@@ -12,6 +12,7 @@ var initialPos;
 var readyPlayers = [];
 var playerReady = false;
 var gameStarted = false;
+var playerPositions = {};
 
 
 // initializes the map
@@ -28,6 +29,34 @@ function initMap() {
   initialPosition();
   
 }
+var initialPosition = function() {
+  console.log('initialPosition()')
+  if (navigator.geolocation){
+
+    navigator.geolocation.getCurrentPosition(
+      function(position){
+        initialPos = {
+          lat: position.coords.latitude,
+          lng : position.coords.longitude
+        }
+        
+      });
+        console.log('kör createPlayerMarker')
+        createPlayerMarker(initialPos);
+  }
+}
+
+var createPlayerMarker=function(initialPos){
+  console.log('creating initial marker')
+  marker = new google.maps.Marker({
+    position: initialPos,
+    map: map,
+    title: 'Your position',
+    animation: google.maps.Animation.DROP,
+    icon: 'img/locationMarker.png'
+  });
+  
+}
 
 //decideDistance, for user position {for egg position}
 
@@ -39,6 +68,7 @@ var startGame = true;
 
 
 startButt.addEventListener('click', function(){
+  getLocation();
   usrAlias = String(usrAlias.value);
   /*if (usrAlias == "") {
     usrAlias = 'Eggbert';
@@ -74,10 +104,6 @@ startButt.addEventListener('click', function(){
         });
   });
 
-  getLocation();
-  //console.log("YOYO POST TO READY CHANNEL");
-  //var readyPlayers = [];
-  
 
   if (startGame === true) { //make button clickable and stuff
     //hide startscreen
@@ -87,33 +113,8 @@ startButt.addEventListener('click', function(){
     document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
     document.getElementById("gameUI").setAttribute("style", "display:block");
 
-    //console.log(usrAlias);
-    //game(usrAlias);
-    //setNewUUID(usrAlias);
-    //publish(scoreboard,scoreChannel);
     playerReady = true;
 
-    // console.log("YO READY?!");
-    // pubnub_data.history({
-    //   channel: readyChannel,
-    //   count: 1,
-    //   callback: function(history) {
-    //     console.log("READY HOSTPRYYYYYYYYYYYYY");
-    //     console.log(history[0][0].text);
-    //     if (history == undefined || history[0][0].text == "tom" || history[0][0] == undefined || history[0][0].text == undefined) {
-    //       var readyPlayers = []
-    //       readyPlayers.push(user.uuid);
-    //       publish(readyPlayers,readyChannel);
-    //     } else {
-    //       readyPlayers = history[0][0].text;
-    //       readyPlayers.push(user.uuid);
-    //       publish(readyPlayers,readyChannel);
-    //       console.log("Ready history: ",readyPlayers);
-    //     }
 
-    //   }
-    // })
-
-    //createEggs();
   }
 });

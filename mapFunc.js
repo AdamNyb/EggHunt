@@ -69,37 +69,7 @@ var randomEggs = function() {
   return randomPositions;
 }
 
-var initialPosition = function() {
-  console.log('initialPosition()')
-  if (navigator.geolocation){
 
-    navigator.geolocation.getCurrentPosition(
-      function(position){
-        initialPos = {
-          lat: position.coords.latitude,
-          lng : position.coords.longitude
-        }
-        
-      });
-        console.log('kör createPlayerMarker')
-        createPlayerMarker(initialPos);
-  }
-}
-
-
-
-var createPlayerMarker=function(initialPos){
-  console.log('creating initial marker')
-  marker = new google.maps.Marker({
-    position: initialPos,
-    map: map,
-    title: 'Your position',
-    animation: google.maps.Animation.DROP,
-    icon: 'img/locationMarker.png'
-  });
-  
-    
-}
 
 
 
@@ -121,10 +91,8 @@ var getLocation = function(){
         //console.log('currentPos:')
         //console.log(currentPos)
 
-        publish(currentPos,positionChannel)
-        getOthersLocation()
+        publish(currentPos,positionChannel);
        
-
         //return currentPos;
         userDistance(position.coords.latitude, position.coords.longitude);
       }/*,

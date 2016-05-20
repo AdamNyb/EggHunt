@@ -103,6 +103,8 @@ pubnub_data.subscribe({
 // })
 // publish("tom",readyChannel);
 
+publish("YO",gameCtrlChannel);
+
 // listens to gameCtrlChannel
 // listens for 'startNewGame' message
 pubnub_data.subscribe({
@@ -220,61 +222,50 @@ pubnub_data.subscribe({
 	}
 })
 
+pubnub_data.subscribe({
+	channel: positionChannel,
+	message: function(message) {
+		// kolla om ny position inte är min nya
+		// uppdatera denna markers position
+		if ( message.text == "newGame" ) {
+			// empty playerpositions
+			playerPositions = {};
+		} else {
+			console.log("positionChannel recieved a message", message);
+			if ( message.poster == user.uuid ) {
+				console.log("MY POSITION!");
+			} else if ( message.poster != user.uuid ) {
+				// if the player doesn't have a marker
+				console.log("the player doesn't have a marker, let's create a new one");
+				if ( playerPositions[message.poster] == undefined || playerPositions[message.poster] == null ) {
+					// creates new marker
+					var otherPlayer = new google.maps.Marker({
+				      position: {lat: message.text.lat, lng: message.text.lng},
+				      map: map,
+				      title: message.poster,
+				      animation: google.maps.Animation.DROP
+				      //icon: 'img/egg-app-icon.gif',
+				    });
+					playerPositions[message.poster] = otherPlayer;
+				} else { // the player already has a marker
+					// update markers position
+					console.log("The player HAS a marker, let's update it");
+					var currentPos = {
+						lat: message.text.lat,
+						lng: message.text.lng
+					};
+					playerPositions[message.poster].setPosition(currentPos);
+				}
+			}
+		}
+	}
+});
+
 // när sidan laddas, kolla om det finns eggPositions i eggkanalen
 // om det inte finns, skapa egna egg
 // om det finns, kolla om den som skapade är online
 // om den är online, använd de existerande
 
-//publish("tom",eggChannel);
-
-// pubnub_data.history({
-// 	channel: eggChannel,
-// 	count: 1,
-// 	callback: function(history) {
-// 		console.log("EGG HISTORYYYYY",history);
-// 		// is the last post eggPositions?
-// 		if( history[0][0].text[0] == "egg0" ) {
-// 			console.log("Eggs already created");
-// 			// is the poster online?
-// 			pubnub_data.where_now({
-// 			    uuid: history[0][0].poster,
-// 			    //uuid: 'basj',
-// 			    callback: function(channels){
-// 			        console.log(channels.channels.length);
-// 			        //if the user is online
-// 			        if (channels.channels.length > 0) {
-// 			        	placeEggs(history[0][0].text);
-// 			        } else {
-// 			        	// the user is not online
-// 			        	createEggs();
-// 			        }
-// 			    },
-// 			    error : function(m){
-// 			        console.log(m)
-// 			    }
-// 			});
-// 			// pubnub_data.here_now({
-// 			//     channel: eggChannel,
-// 			//     uuids: true,
-// 			//     callback : function(hereNow){
-// 			//     	hereNow = hereNow.uuids;
-// 			//         console.log("HERE NOW",hereNow);
-// 			//         if ( hereNow.indexOf(history[0][0].poster) > -1 ) {
-// 			//         	// the poster is here now (online)
-// 			//         	console.log("Poster is online!");
-// 			//         	placeEggs(history[0][0].text);
-// 			//         } else {
-// 			//         	console.log("POster is not online, creating my own eggs");
-// 			//         	createEggs();
-// 			//         }
-// 			//     }
-// 			// });
-// 		} else {
-// 			// skapa egna egg
-// 			createEggs();
-// 		}
-// 	}
-// })
 
 // Get List of Occupants and Occupancy Count.
 pubnub_data.here_now({
@@ -430,15 +421,9 @@ function updateMyScore(scoreboard) {
 	myScore.innerHTML = scoreboard[user.uuid];
 }
 
-function getOthersLocation(){
-	pubnub_data.subscribe({
-		channel: ['positionChannel'],
-		message: function(message) {
 
-		}
-	});
 
-}
+
 
 function gameReady() {
 	startGame = true;
