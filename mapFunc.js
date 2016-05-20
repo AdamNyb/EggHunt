@@ -1,5 +1,6 @@
 // creates eggs
 function createEggs(){
+  console.log("createEggs()");
   randomPositions = randomEggs();
 
   //markers = [];
@@ -22,14 +23,17 @@ function createEggs(){
   publish(eggData, eggChannel);
 }
 
-function placeEggs(positions){
- 
+
+function placeEggs(eggPositions){
+  console.log("placeEggs()");
   //markers = [];
-  //console.log("eggs", eggs);
-  for (var i = 0; i < positions.length; i +2) {
-    eggName = positions[i];
+  console.log("eggdata", eggPositions);
+  for (var i = 0; i < eggPositions.length; i +=2) {
+    //console.log(eggData[i]);
+    //console.log(eggData[i+1].lat);
+    eggName = eggPositions[i];
     var egg = new google.maps.Marker({
-      position: {lat: positions[i+1].lat(), lng: positions[i+1].lng()},
+      position: {lat: eggPositions[i+1].lat, lng: eggPositions[i+1].lng},
       map: map,
       title: eggName,
       animation: google.maps.Animation.DROP,
