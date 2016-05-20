@@ -173,7 +173,7 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
   if (distance < 15) {
-    //console.log("SHORT DISTANCE!!!");
+    console.log("SCOOOOORE!!!");
     //console.log("egg title", eggTitle);
     removeEgg(eggTitle);
     vibrate();

@@ -115,7 +115,7 @@ pubnub_data.subscribe({
 			console.log("WE HAVE STARTED A NEW GAME!!!!!!!!");
 			console.log("THIS IS THE ONE WHO STARTED THE GAME: ",message.poster);
 			gameStarted = true;
-			//publish("gameStarted",gameCtrlChannel);
+			publish("gameStarted",gameCtrlChannel);
 			if (message.poster == user.uuid) {
 				// if I posted start game -> I will post newGame
 				console.log("if I posted start game -> I will post newGame");
@@ -153,6 +153,19 @@ pubnub_data.subscribe({
 				callback: function(history) {
 					if (history[0][0].text != "newGame") {
 						publish("newGame",scoreChannel);
+					}
+				}
+			})
+		} else if ( message.text == "gameStarted" && message.poster != user.uuid ) {
+			pubnub_data.history({
+				channel: eggChannel,
+				count: 1,
+				callback: function(history) {
+					if (history[0][0].text != "newGame") {
+						console.log("EGG......: I didn't start the game so I will read egg positions");
+						var eggPos = history[0][0].text;
+						console.log("EGG.....: This is the egg positoins I'm trying to use: ",eggPos);
+						placeEggs(eggPos);
 					}
 				}
 			})
@@ -340,7 +353,7 @@ function removeEgg(takenEgg) {
 		if (currEgg.title == takenEgg) {
 			currEgg.setMap(null);
 			eggs.splice(i, 1);
-			eggTitles.splice(i, 1);
+			eggData.splice(i, 1);
 		}
 	}
 	getScoreboard();
@@ -395,19 +408,6 @@ function getScoreboard() {
 }
 
 
-
-
-function getOthersLocation(){
-
-	pubnub_data.subscribe({
-	channel: ['positionChannel'],
-	message: function(message) {
-
-	}
-});
-
-}
-
 function addScore(scoreboard) {
 	//console.log("Let's rint out MY score");
 	//console.log(scoreboard);
@@ -424,7 +424,20 @@ function addScore(scoreboard) {
 
 function updateMyScore(scoreboard) {
 	var myScore = document.getElementById('myScore');
+	if (scoreboard[user.uuid] == undefined) {
+		scoreboard[user.uuid] = 0;
+	}
 	myScore.innerHTML = scoreboard[user.uuid];
+}
+
+function getOthersLocation(){
+	pubnub_data.subscribe({
+		channel: ['positionChannel'],
+		message: function(message) {
+
+		}
+	});
+
 }
 
 function gameReady() {

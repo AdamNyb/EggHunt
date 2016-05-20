@@ -48,16 +48,30 @@ startButt.addEventListener('click', function(){
 
   setNewUUID(usrAlias, function(){
     console.log("CALLBACKKKKK!!!!!");
-    // pubnub_data.history({
-    //       channel: gameCtrlChannel,
-    //       count: 1,
-    //       callback: function(history) {
-    //         if (history[0][0].text != "startNewGame") {
-    //           publish("startNewGame",gameCtrlChannel);
-    //         }
-    //       }
-    //     });
-    publish("startNewGame",gameCtrlChannel);
+    pubnub_data.history({
+          channel: gameCtrlChannel,
+          count: 1,
+          callback: function(history) {
+            console.log("YOYO, let's see if the game is already started", history[0][0].text);
+            if (history[0][0].text == "gameStarted") {
+              pubnub_data.history({
+                channel: eggChannel,
+                count: 1, 
+                callback: function(history) {
+                  console.log("The game is started",history[0][0].text);
+                  console.log("Let's try to place the eggs");
+                  var eggPos = history[0][0].text;
+                  if (eggPos != "newGame") {
+                    placeEggs(eggPos);
+                  }
+                }
+              })
+              //publish("startNewGame",gameCtrlChannel);
+            } else {
+              publish("startNewGame",gameCtrlChannel);
+            }
+          }
+        });
   });
 
   getLocation();
