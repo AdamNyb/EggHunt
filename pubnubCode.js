@@ -103,6 +103,8 @@ pubnub_data.subscribe({
 // om det finns, kolla om den som skapade är online
 // om den är online, använd de existerande
 
+//publish("tom",eggChannel);
+
 pubnub_data.history({
 	channel: eggChannel,
 	count: 1,
@@ -112,22 +114,39 @@ pubnub_data.history({
 		if( history[0][0].text[0] == "egg0" ) {
 			console.log("Eggs already created");
 			// is the poster online?
-			pubnub_data.here_now({
-			    channel: eggChannel,
-			    uuids: true,
-			    callback : function(hereNow){
-			    	hereNow = hereNow.uuids;
-			        console.log("HERE NOW",hereNow);
-			        if ( hereNow.indexOf(history[0][0].poster) > -1 ) {
-			        	// the poster is here now (online)
-			        	console.log("Poster is online!");
+			pubnub_data.where_now({
+			    uuid: history[0][0].poster,
+			    //uuid: 'basj',
+			    callback: function(channels){
+			        console.log(channels.channels.length);
+			        //if the user is online
+			        if (channels.channels.length > 0) {
 			        	placeEggs(history[0][0].text);
 			        } else {
-			        	console.log("POster is not online, creating my own eggs");
+			        	// the user is not online
 			        	createEggs();
 			        }
+			    },
+			    error : function(m){
+			        console.log(m)
 			    }
 			});
+			// pubnub_data.here_now({
+			//     channel: eggChannel,
+			//     uuids: true,
+			//     callback : function(hereNow){
+			//     	hereNow = hereNow.uuids;
+			//         console.log("HERE NOW",hereNow);
+			//         if ( hereNow.indexOf(history[0][0].poster) > -1 ) {
+			//         	// the poster is here now (online)
+			//         	console.log("Poster is online!");
+			//         	placeEggs(history[0][0].text);
+			//         } else {
+			//         	console.log("POster is not online, creating my own eggs");
+			//         	createEggs();
+			//         }
+			//     }
+			// });
 		} else {
 			// skapa egna egg
 			createEggs();
