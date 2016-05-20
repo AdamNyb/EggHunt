@@ -27,7 +27,7 @@ function createEggs(){
 function placeEggs(eggPositions){
   console.log("placeEggs()");
   //markers = [];
-  console.log("eggdata", eggPositions);
+  console.log("My eggdata (in place eggs)", eggPositions);
   for (var i = 0; i < eggPositions.length; i +=2) {
     //console.log(eggData[i]);
     //console.log(eggData[i+1].lat);

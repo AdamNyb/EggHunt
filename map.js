@@ -25,7 +25,6 @@ function initMap() {
   map.setTilt(45);
 
 
-  // creates the other controls
   
 }
 
@@ -45,11 +44,19 @@ startButt.addEventListener('click', function(){
   }*/
   //console.log(usrAlias);
   //game(usrAlias);
-  setNewUUID(usrAlias);
+
+  setNewUUID(usrAlias, function(){
+    console.log("CALLBACKKKKK!!!!! after uuid is set");
+    
+    initPubnub();
+    console.log("pubnub is initialized");
+  });
+  publish("startNewGame",gameCtrlChannel);
+
   initialPosition();
   getLocation();
-  console.log("YOYO POST TO READY CHANNEL");
-  var readyPlayers = [];
+  //console.log("YOYO POST TO READY CHANNEL");
+  //var readyPlayers = [];
   
 
   if (startGame === true) { //make button clickable and stuff
@@ -60,32 +67,32 @@ startButt.addEventListener('click', function(){
     document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
     document.getElementById("gameUI").setAttribute("style", "display:block");
 
-    console.log(usrAlias);
+    //console.log(usrAlias);
     //game(usrAlias);
     //setNewUUID(usrAlias);
-    publish(scoreboard,scoreChannel);
+    //publish(scoreboard,scoreChannel);
     playerReady = true;
 
-    console.log("YO READY?!");
-    pubnub_data.history({
-      channel: readyChannel,
-      count: 1,
-      callback: function(history) {
-        console.log("READY HOSTPRYYYYYYYYYYYYY");
-        console.log(history[0][0].text);
-        if (history == undefined || history[0][0].text == "tom" || history[0][0] == undefined || history[0][0].text == undefined) {
-          var readyPlayers = []
-          readyPlayers.push(user.uuid);
-          publish(readyPlayers,readyChannel);
-        } else {
-          readyPlayers = history[0][0].text;
-          readyPlayers.push(user.uuid);
-          publish(readyPlayers,readyChannel);
-          console.log("Ready history: ",readyPlayers);
-        }
+    // console.log("YO READY?!");
+    // pubnub_data.history({
+    //   channel: readyChannel,
+    //   count: 1,
+    //   callback: function(history) {
+    //     console.log("READY HOSTPRYYYYYYYYYYYYY");
+    //     console.log(history[0][0].text);
+    //     if (history == undefined || history[0][0].text == "tom" || history[0][0] == undefined || history[0][0].text == undefined) {
+    //       var readyPlayers = []
+    //       readyPlayers.push(user.uuid);
+    //       publish(readyPlayers,readyChannel);
+    //     } else {
+    //       readyPlayers = history[0][0].text;
+    //       readyPlayers.push(user.uuid);
+    //       publish(readyPlayers,readyChannel);
+    //       console.log("Ready history: ",readyPlayers);
+    //     }
 
-      }
-    })
+    //   }
+    // })
 
     //createEggs();
   }
