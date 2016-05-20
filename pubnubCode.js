@@ -4,9 +4,20 @@ var positionChannel = 'positionChannel2';
 var readyChannel = 'readyChannel2';
 var gameCtrlChannel = 'gameCtrlChannel2';
 var gameChannel_Group = 'gameChannel_Group2';
-var user = {};
+var user = {
+	uuid: generateUUID(usrAlias)
+};
 var scoreboard = {};
-var pubnub_data;
+
+
+var pubnub_data = PUBNUB.init({ // initializes pubnub
+	publish_key: 'pub-c-bf94e267-7c61-4c6d-b237-727f398f655d',
+	subscribe_key: 'sub-c-237e52d0-1b4c-11e6-be83-0619f8945a4f',
+	uuid: user.uuid
+	//state: {
+	//	"alias" : user.alias
+	//}
+});
 
 function generateUUID(usrAlias) {
 	//generates a random uuid
@@ -39,55 +50,19 @@ function setNewUUID(usrAlias, callback) {
 	callback();
 }
 
-
-function initPubnub() {
-	console.log("INIT PUBNUB----");
-	pubnub_data = PUBNUB.init({ // initializes pubnub
-		publish_key: 'pub-c-bf94e267-7c61-4c6d-b237-727f398f655d',
-		subscribe_key: 'sub-c-237e52d0-1b4c-11e6-be83-0619f8945a4f',
-		uuid: user.uuid,
-		state: {
-			"alias" : user.alias
-		}
-	});
-
-	// creates channel group
-	pubnub_data.channel_group_add_channel({
-	    channel: eggChannel,
-	    channel_group: gameChannel_Group
-	});
-	pubnub_data.channel_group_add_channel({
-	    channel: scoreChannel,
-	    channel_group: gameChannel_Group
-	});
-	pubnub_data.channel_group_add_channel({
-	    channel: positionChannel,
-	    channel_group: gameChannel_Group
-	});
-
-	pubnub_data.subscribe({
-		channel: ['eggChannel2','scoreChannel2','positionChannel2'],
-		callback: function(m) {}
-	});
-
-	console.log("Let's subscribe to channels!");
-	subscribeToChannels();
-
-	// Get List of Occupants and Occupancy Count.
-	pubnub_data.here_now({
-		channel_group: gameChannel_Group,
-		callback: function (m) {
-			console.log("Occupancy: ");
-			console.log(m);
-			if (m.total_occupancy > 4) { //4 channels means number of players = m*4
-				gameReady();
-			}
-		}
-	});
-} 
-
-
-
+// creates channel group
+pubnub_data.channel_group_add_channel({
+    channel: eggChannel,
+    channel_group: gameChannel_Group
+});
+pubnub_data.channel_group_add_channel({
+    channel: scoreChannel,
+    channel_group: gameChannel_Group
+});
+pubnub_data.channel_group_add_channel({
+    channel: positionChannel,
+    channel_group: gameChannel_Group
+});
 
 
 
@@ -99,7 +74,10 @@ function initPubnub() {
 //     }
 // });
 
-
+pubnub_data.subscribe({
+	channel: ['eggChannel2','scoreChannel2','positionChannel2'],
+	callback: function(m) {}
+});
 
 // pubnub_data.subscribe({
 // 	channel: readyChannel,
@@ -124,109 +102,110 @@ function initPubnub() {
 // })
 // publish("tom",readyChannel);
 
-function subscribeToChannels() {
-	console.log("in subscribeToChannels");
-	// listens to gameCtrlChannel
-	// listens for 'startNewGame' message
-	pubnub_data.subscribe({
-		channel: gameCtrlChannel,
-		message: function(message) {
-			console.log("listening to gameCtrlChannel, and we recieved a message!");
-			console.log(message.text);
-			if ( message.text == "startNewGame" && gameStarted == false ) {
-				// starts new game, and resets all the other channels
-				console.log("WE HAVE STARTED A NEW GAME!!!!!!!!");
-				gameStarted = true;
-				if (message.poster == user.uuid) {
-					// if I posted start game -> I will post newGame
-					console.log("if I posted start game -> I will post newGame");
-					publish("newGame",eggChannel);
-				} else {
-					// checks if the last message is "newGame"
-					// if so, don't post a new "newGame" message
-					// no
-					// checks egg postiosns and places them
-					pubnub_data.history({
-						channel: eggChannel,
-						count: 1,
-						callback: function(history) {
-							if (history[0][0].text != "newGame") {
-								console.log("EGG......: I didn't start the game so I will read egg positions");
-								var eggPos = history[0][0].text;
-								console.log("EGG.....: This is the egg positoins I'm trying to use: ",eggPos);
-								placeEggs(eggPos);
-							}
-						}
-					})
-				}
+// listens to gameCtrlChannel
+// listens for 'startNewGame' message
+pubnub_data.subscribe({
+	channel: gameCtrlChannel,
+	message: function(message) {
+		console.log("listening to gameCtrlChannel, and we recieved a message!");
+		console.log(message.text);
+		if ( message.text == "startNewGame" && gameStarted == false ) {
+			// starts new game, and resets all the other channels
+			console.log("WE HAVE STARTED A NEW GAME!!!!!!!!");
+			console.log("THIS IS THE ONE WHO STARTED THE GAME: ",message.poster);
+			gameStarted = true;
+			//publish("gameStarted",gameCtrlChannel);
+			if (message.poster == user.uuid) {
+				// if I posted start game -> I will post newGame
+				console.log("if I posted start game -> I will post newGame");
+				publish("newGame",eggChannel);
+			} else {
+				// checks if the last message is "newGame"
+				// if so, don't post a new "newGame" message
+				// no
+				// checks egg postiosns and places them
 				pubnub_data.history({
-					channel: positionChannel,
+					channel: eggChannel,
 					count: 1,
 					callback: function(history) {
 						if (history[0][0].text != "newGame") {
-							publish("newGame",positionChannel);
+							console.log("EGG......: I didn't start the game so I will read egg positions");
+							var eggPos = history[0][0].text;
+							console.log("EGG.....: This is the egg positoins I'm trying to use: ",eggPos);
+							placeEggs(eggPos);
 						}
 					}
 				})
-				pubnub_data.history({
-					channel: scoreChannel,
-					count: 1,
-					callback: function(history) {
-						if (history[0][0].text != "newGame") {
-							publish("newGame",scoreChannel);
-						}
-					}
-				})
-			} else if ( message.text == "endGame" && gameStarted == true ) {
-				gameStarted = false;
-				publish("endGame",eggChannel,"gameCtrl");
-				publish("endGame",positionChannel,"gameCtrl");
-				publish("endGame",scoreChannel,"gameCtrl");
 			}
-		}
-	})
-
-	// listen to the egg channel
-	pubnub_data.subscribe({
-		channel: eggChannel,
-		message: function(message) {
-			console.log("listeing to eggchannel, and we have a new message: ", message);
-			if ( message.text == "newGame" ) {
-				console.log("Eggchannel starts new game");
-				console.log("This is the one who started a new game: ", message.poster);
-				console.log("This is my uuid: ", user.uuid);
-				if ( message.poster == user.uuid ) {
-					console.log("EGG: I started the game so I will create eggs!");
-					createEggs();
-				} else if ( message.poster != user.uuid ) {
-					console.log("EGG: I didn't start the game so I will read egg positions");
-					var eggPos = message.text;
-					console.log("EGG: This is the egg positoins I'm trying to use: ",eggPos);
-					placeEggs(eggPos);
+			pubnub_data.history({
+				channel: positionChannel,
+				count: 1,
+				callback: function(history) {
+					if (history[0][0].text != "newGame") {
+						publish("newGame",positionChannel);
+					}
 				}
-			} else {
-				// if it's new egg coordinates
-				// check if it's the same coordinates that I have
-				// or check if I posted the coordinates
-			}
+			})
+			pubnub_data.history({
+				channel: scoreChannel,
+				count: 1,
+				callback: function(history) {
+					if (history[0][0].text != "newGame") {
+						publish("newGame",scoreChannel);
+					}
+				}
+			})
+		} else if ( message.text == "endGame" && gameStarted == true ) {
+			gameStarted = false;
+			publish("endGame",eggChannel,"gameCtrl");
+			publish("endGame",positionChannel,"gameCtrl");
+			publish("endGame",scoreChannel,"gameCtrl");
 		}
-	})
+	}
+})
 
-	pubnub_data.subscribe({
-		channel: scoreChannel,
-		message: function(message) {
-			if ( message.text == "newGame" ) {
-				console.log("Scorechannels starts new game");
-				var blankScoreboard = {};
-				publish(blankScoreboard,scoreChannel);
-			} else {
-				scoreboard = message.text;
-				updateMyScore(scoreboard);
+// listen to the egg channel
+pubnub_data.subscribe({
+	channel: eggChannel,
+	message: function(message) {
+		console.log("listeing to eggchannel, and we have a new message: ", message);
+		if ( message.text == "newGame" ) {
+			console.log("Eggchannel starts new game");
+			console.log("This is the one who started a new game: ", message.poster);
+			console.log("This is my uuid: ", user.uuid);
+			if ( message.poster == user.uuid ) {
+				console.log("EGG: I started the game so I will create eggs!");
+				createEggs();
+			} else if ( message.poster != user.uuid ) {
+				// I didn't create the game
+				console.log("I didn't start the game");
 			}
+		} else if ( message.text != "newGame" && message.poster != user.uuid ) {
+			// if it's new egg coordinates
+			// check if it's the same coordinates that I have
+			// or check if I posted the coordinates
+			console.log("EGG: I didn't start the game so I will read egg positions");
+			var eggPos = message.text;
+			console.log("EGG: This is the egg positoins I'm trying to use: ",eggPos);
+			placeEggs(eggPos);
 		}
-	})
+	}
+})
 
-}
+pubnub_data.subscribe({
+	channel: scoreChannel,
+	message: function(message) {
+		if ( message.text == "newGame" ) {
+			console.log("Scorechannels starts new game");
+			var blankScoreboard = {};
+			publish(blankScoreboard,scoreChannel);
+		} else {
+			scoreboard = message.text;
+			updateMyScore(scoreboard);
+		}
+	}
+})
+
 // när sidan laddas, kolla om det finns eggPositions i eggkanalen
 // om det inte finns, skapa egna egg
 // om det finns, kolla om den som skapade är online
@@ -283,7 +262,17 @@ function subscribeToChannels() {
 // 	}
 // })
 
-
+// Get List of Occupants and Occupancy Count.
+pubnub_data.here_now({
+	channel_group: gameChannel_Group,
+	callback: function (m) {
+		console.log("Occupancy: ");
+		console.log(m);
+		if (m.total_occupancy > 4) { //4 channels means number of players = m*4
+			gameReady();
+		}
+	}
+});
 
 
 // pubnub_data.subscribe({

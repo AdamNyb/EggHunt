@@ -25,6 +25,7 @@ function initMap() {
   map.setTilt(45);
 
 
+  initialPosition();
   
 }
 
@@ -46,14 +47,19 @@ startButt.addEventListener('click', function(){
   //game(usrAlias);
 
   setNewUUID(usrAlias, function(){
-    console.log("CALLBACKKKKK!!!!! after uuid is set");
-    
-    initPubnub();
-    console.log("pubnub is initialized");
+    console.log("CALLBACKKKKK!!!!!");
+    // pubnub_data.history({
+    //       channel: gameCtrlChannel,
+    //       count: 1,
+    //       callback: function(history) {
+    //         if (history[0][0].text != "startNewGame") {
+    //           publish("startNewGame",gameCtrlChannel);
+    //         }
+    //       }
+    //     });
+    publish("startNewGame",gameCtrlChannel);
   });
-  publish("startNewGame",gameCtrlChannel);
 
-  initialPosition();
   getLocation();
   //console.log("YOYO POST TO READY CHANNEL");
   //var readyPlayers = [];
