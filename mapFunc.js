@@ -70,10 +70,6 @@ var randomEggs = function() {
 }
 
 
-
-
-
-
 var getLocation = function(){
   console.log('getLocation()');
 
