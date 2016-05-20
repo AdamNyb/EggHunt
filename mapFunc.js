@@ -172,6 +172,12 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
     Math.sin(dLong / 2) * Math.sin(dLong / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
+  if (distance < 15) {
+    //console.log("SHORT DISTANCE!!!");
+    //console.log("egg title", eggTitle);
+    removeEgg(eggTitle);
+    vibrate();
+  }
   //console.log("distance:", distance);
 }
 
@@ -182,12 +188,6 @@ var vibrate = function(){
  
 }
 
-  if (distance < 15) {
-    //console.log("SHORT DISTANCE!!!");
-    //console.log("egg title", eggTitle);
-    removeEgg(eggTitle);
-    vibrate();
-  }
 
   //var distance = getDistance(sq1Lat, sq1Lng, sq2Lat, sq2Lng).toFixed(2)
   //return distance; // returns the distance in meter
