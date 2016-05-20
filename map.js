@@ -26,7 +26,7 @@ function initMap() {
   map.setTilt(45);
 
 
-  initialPosition();
+  //initialPosition();
   
 }
 var initialPosition = function() {
