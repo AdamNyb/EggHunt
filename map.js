@@ -40,9 +40,9 @@ var startGame = true;
 
 startButt.addEventListener('click', function(){
   usrAlias = String(usrAlias.value);
-  if (usrAlias == "") {
+  /*if (usrAlias == "") {
     usrAlias = 'Eggbert';
-  }
+  }*/
   //console.log(usrAlias);
   //game(usrAlias);
   setNewUUID(usrAlias);
@@ -62,7 +62,7 @@ startButt.addEventListener('click', function(){
 
     console.log(usrAlias);
     //game(usrAlias);
-    setNewUUID(usrAlias);
+    //setNewUUID(usrAlias);
     publish(scoreboard,scoreChannel);
     playerReady = true;
 
