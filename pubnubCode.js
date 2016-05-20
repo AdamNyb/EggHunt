@@ -79,7 +79,7 @@ pubnub_data.subscribe({
 	message: function(message){
 		console.log("READYMSG");
 		console.log(message.text);
-		if (gameStarted == false && message.text[0] != "tom") {
+		if (gameStarted == false || message.text[0] != "tom") {
 			if (message.text[0] == user.uuid) {
 				createEggs();
 			} else {
@@ -95,7 +95,7 @@ pubnub_data.subscribe({
 		}
 	}
 })
-//publish("tom",readyChannel);
+publish("tom",readyChannel);
 
 // Get List of Occupants and Occupancy Count.
 pubnub_data.here_now({
