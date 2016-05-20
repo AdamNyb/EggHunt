@@ -43,7 +43,7 @@ function setNewUUID(usrAlias) {
 	    PUBNUB.db.set('session', user.uuid); 
 	    //return uuid; 
 	})();
-	console.log("User uuid",user.uuid);
+	//console.log("User uuid",user.uuid);
 }
 
 // creates channel group
@@ -190,8 +190,8 @@ pubnub_data.here_now({
 
 function publish(text,channel) {
 	if (!text) return;
-	console.log("I'm gonna post this:");
-	console.log(text);
+	//console.log("I'm gonna post this:");
+	//console.log(text);
 
 	 // PubNub Publish API
 	pubnub_data.publish({
@@ -201,7 +201,7 @@ function publish(text,channel) {
 	    text: text
 	  },
 	  callback: function(m) {
-	    console.log(m);
+	    //console.log(m);
 	  }
 	});
 }
@@ -279,6 +279,20 @@ function getScoreboard() {
 			addScore(scoreboard);
 		}
 	})
+}
+
+
+
+
+function getOthersLocation(){
+
+	pubnub_data.subscribe({
+	channel: ['positionChannel'],
+	message: function(message) {
+
+	}
+});
+
 }
 
 function addScore(scoreboard) {

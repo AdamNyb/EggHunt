@@ -1,6 +1,6 @@
 // creates eggs
 function createEggs(){
-  console.log("createEggs()");
+  //console.log("createEggs()");
   randomPositions = randomEggs();
 
   //markers = [];
@@ -118,6 +118,12 @@ var getLocation = function(){
 
         
         updatePlayerMarker(currentPos);
+        //console.log('currentPos:')
+        //console.log(currentPos)
+
+        publish(currentPos,positionChannel)
+        getOthersLocation()
+       
 
         //return currentPos;
         userDistance(position.coords.latitude, position.coords.longitude);
@@ -130,8 +136,8 @@ var getLocation = function(){
 }
 
 var updatePlayerMarker = function(currentPos) {
-  console.log("updatePlayerMarker()");
-  console.log("currentPos", currentPos);
+  //console.log("updatePlayerMarker()");
+  //console.log("currentPos", currentPos);
   marker.setPosition(currentPos);
 }
 
