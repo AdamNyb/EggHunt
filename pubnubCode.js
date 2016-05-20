@@ -46,6 +46,7 @@ function setNewUUID(usrAlias, callback) {
 	    PUBNUB.db.set('session', user.uuid); 
 	    //return uuid; 
 	})();
+	
 	console.log("User uuid",user.uuid);
 	callback();
 }
@@ -313,7 +314,7 @@ function publish(text,channel,poster) {
 	    text: text
 	  },
 	  callback: function(m) {
-	    console.log(m);
+	    //console.log(m);
 	  }
 	});
 }
@@ -391,6 +392,20 @@ function getScoreboard() {
 			addScore(scoreboard);
 		}
 	})
+}
+
+
+
+
+function getOthersLocation(){
+
+	pubnub_data.subscribe({
+	channel: ['positionChannel'],
+	message: function(message) {
+
+	}
+});
+
 }
 
 function addScore(scoreboard) {
