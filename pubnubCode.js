@@ -61,6 +61,7 @@ pubnub_data.channel_group_add_channel({
 });
 
 
+
 // // subscribes to channel group
 // pubnub_data.subscribe({
 //     channel_group: gameChannel_Group,
@@ -74,28 +75,65 @@ pubnub_data.subscribe({
 	callback: function(m) {}
 });
 
-pubnub_data.subscribe({
-	channel: readyChannel,
-	message: function(message){
-		console.log("READYMSG");
-		console.log(message.text);
-		if (gameStarted == false || message.text[0] != "tom") {
-			if (message.text[0] == user.uuid) {
-				createEggs();
-			} else {
-				// look for already made eggs
-				pubnub_data.history({
-			      channel: eggChannel,
-			      count: 1,
-			      callback: function(history) {
-			      	placeEggs(history[0][0].text);
-			      }
-				});
-			}
+// pubnub_data.subscribe({
+// 	channel: readyChannel,
+// 	message: function(message){
+// 		console.log("READYMSG");
+// 		console.log(message.text);
+// 		if (gameStarted == false || message.text[0] != "tom") {
+// 			if (message.text[0] == user.uuid) {
+// 				createEggs();
+// 			} else {
+// 				// look for already made eggs
+// 				pubnub_data.history({
+// 			      channel: eggChannel,
+// 			      count: 1,
+// 			      callback: function(history) {
+// 			      	placeEggs(history[0][0].text);
+// 			      }
+// 				});
+// 			}
+// 		}
+// 	}
+// })
+// publish("tom",readyChannel);
+
+// när sidan laddas, kolla om det finns eggPositions i eggkanalen
+// om det inte finns, skapa egna egg
+// om det finns, kolla om den som skapade är online
+// om den är online, använd de existerande
+
+pubnub_data.history({
+	channel: eggChannel,
+	count: 1,
+	callback: function(history) {
+		console.log("EGG HISTORYYYYY",history);
+		// is the last post eggPositions?
+		if( history[0][0].text[0] == "egg0" ) {
+			console.log("Eggs already created");
+			// is the poster online?
+			pubnub_data.here_now({
+			    channel: eggChannel,
+			    uuids: true,
+			    callback : function(hereNow){
+			    	hereNow = hereNow.uuids;
+			        console.log("HERE NOW",hereNow);
+			        if ( hereNow.indexOf(history[0][0].poster) > -1 ) {
+			        	// the poster is here now (online)
+			        	console.log("Poster is online!");
+			        	placeEggs(history[0][0].text);
+			        } else {
+			        	console.log("POster is not online, creating my own eggs");
+			        	createEggs();
+			        }
+			    }
+			});
+		} else {
+			// skapa egna egg
+			createEggs();
 		}
 	}
 })
-publish("tom",readyChannel);
 
 // Get List of Occupants and Occupancy Count.
 pubnub_data.here_now({
@@ -103,7 +141,7 @@ pubnub_data.here_now({
 	callback: function (m) {
 		console.log("HELLO");
 		console.log(m);
-		if (m.total_occupancy > 3) { //3 channels means number of players = m*3
+		if (m.total_occupancy > 4) { //4 channels means number of players = m*4
 			gameReady();
 		}
 	}
@@ -140,6 +178,7 @@ function publish(text,channel) {
 	pubnub_data.publish({
 	  channel: channel,
 	  message: {
+	  	poster: user.uuid,
 	    text: text
 	  },
 	  callback: function(m) {
