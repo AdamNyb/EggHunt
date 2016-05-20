@@ -75,7 +75,16 @@ var randomEggs = function() {
 
 
 var getLocation = function(){
-  console.log('getLocation()')
+  console.log('getLocation()');
+
+  console.log('creating user marker');
+  marker = new google.maps.Marker({
+    position: null,
+    map: map,
+    title: 'Your position',
+    animation: google.maps.Animation.DROP,
+    icon: 'img/locationMarker.png'
+  });
   
 
   if (navigator.geolocation){

@@ -227,6 +227,8 @@ pubnub_data.subscribe({
 	message: function(message) {
 		// kolla om ny position inte är min nya
 		// uppdatera denna markers position
+		console.log("These are the playerPositions");
+		console.log(playerPositions);
 		if ( message.text == "newGame" ) {
 			// empty playerpositions
 			playerPositions = {};
@@ -236,8 +238,8 @@ pubnub_data.subscribe({
 				console.log("MY POSITION!");
 			} else if ( message.poster != user.uuid ) {
 				// if the player doesn't have a marker
-				console.log("the player doesn't have a marker, let's create a new one");
 				if ( playerPositions[message.poster] == undefined || playerPositions[message.poster] == null ) {
+					console.log("the player doesn't have a marker, let's create a new one", message.poster);
 					// creates new marker
 					var otherPlayer = new google.maps.Marker({
 				      position: {lat: message.text.lat, lng: message.text.lng},
