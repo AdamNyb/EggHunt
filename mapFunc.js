@@ -169,6 +169,7 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
     //console.log("SCOOOOORE!!!");
     //console.log("egg title", eggTitle);
     removeEgg(eggTitle);
+    updateMyScore()
     vibrate();
   }
   //console.log("distance:", distance);

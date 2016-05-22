@@ -31,6 +31,9 @@ function initMap() {
   //initialPosition();
   
 }
+
+
+
 //EMMAS FIL
 // not being used
 // var initialPosition = function() {
