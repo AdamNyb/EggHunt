@@ -75,9 +75,9 @@ var randomEggs = function() {
 
 
 var getLocation = function(){
-  console.log('getLocation()');
+  //console.log('getLocation()');
 
-  console.log('creating user marker');
+  //console.log('creating user marker');
   marker = new google.maps.Marker({
     position: null,
     map: map,
@@ -150,7 +150,7 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
   if (distance < 15) {
-    console.log("SCOOOOORE!!!");
+    //console.log("SCOOOOORE!!!");
     //console.log("egg title", eggTitle);
     removeEgg(eggTitle);
     vibrate();

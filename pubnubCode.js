@@ -1,9 +1,9 @@
-var eggChannel = 'eggChannel2';
-var scoreChannel = 'scoreChannel2';
-var positionChannel = 'positionChannel2';
-var readyChannel = 'readyChannel2';
-var gameCtrlChannel = 'gameCtrlChannel2';
-var gameChannel_Group = 'gameChannel_Group2';
+var eggChannel = 'eggChannel24';
+var scoreChannel = 'scoreChannel24';
+var positionChannel = 'positionChannel24';
+var readyChannel = 'readyChannel24';
+var gameCtrlChannel = 'gameCtrlChannel24';
+var gameChannel_Group = 'gameChannel_Group24';
 var user = {
 	uuid: generateUUID(usrAlias)
 };
@@ -135,7 +135,7 @@ pubnub_data.subscribe({
 							console.log("EGG......: I didn't start the game so I will read egg positions");
 							var eggPos = history[0][0].text;
 							console.log("EGG.....: This is the egg positoins I'm trying to use: ",eggPos);
-							placeEggs(eggPos);
+							//placeEggs(eggPos);
 						}
 					}
 				})
@@ -195,15 +195,17 @@ pubnub_data.subscribe({
 			} else if ( message.poster != user.uuid ) {
 				// I didn't create the game
 				console.log("I didn't start the game");
+				var eggPos = message.text;
+				placeEggs(eggPos);
 			}
 		} else if ( message.text != "newGame" && message.poster != user.uuid ) {
 			// if it's new egg coordinates
 			// check if it's the same coordinates that I have
 			// or check if I posted the coordinates
 			console.log("EGG: I didn't start the game so I will read egg positions");
-			var eggPos = message.text;
+			
 			console.log("EGG: This is the egg positoins I'm trying to use: ",eggPos);
-			placeEggs(eggPos);
+			
 		}
 	}
 })
@@ -245,7 +247,8 @@ pubnub_data.subscribe({
 				      position: {lat: message.text.lat, lng: message.text.lng},
 				      map: map,
 				      title: message.poster,
-				      animation: google.maps.Animation.DROP
+				      animation: google.maps.Animation.DROP,
+				       icon: 'img/bird.png'
 				      //icon: 'img/egg-app-icon.gif',
 				    });
 					playerPositions[message.poster] = otherPlayer;

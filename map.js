@@ -30,7 +30,7 @@ function initMap() {
   
 }
 var initialPosition = function() {
-  console.log('initialPosition()')
+  //console.log('initialPosition()')
   if (navigator.geolocation){
 
     navigator.geolocation.getCurrentPosition(
@@ -41,13 +41,13 @@ var initialPosition = function() {
         }
         
       });
-        console.log('kör createPlayerMarker')
+        //console.log('kör createPlayerMarker')
         createPlayerMarker(initialPos);
   }
 }
 
 var createPlayerMarker=function(initialPos){
-  console.log('creating initial marker')
+  //console.log('creating initial marker')
   marker = new google.maps.Marker({
     position: initialPos,
     map: map,
@@ -77,7 +77,7 @@ startButt.addEventListener('click', function(){
   //game(usrAlias);
 
   setNewUUID(usrAlias, function(){
-    console.log("CALLBACKKKKK!!!!!");
+    //console.log("CALLBACKKKKK!!!!!");
     pubnub_data.history({
           channel: gameCtrlChannel,
           count: 1,
