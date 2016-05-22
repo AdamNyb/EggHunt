@@ -1,11 +1,12 @@
 // creates eggs
 function createEggs(){
   randomPositions = randomEggs();
-
+  //randomPositions = [[59.347425, 18.072734], [59.347538, 18.073198]];
   //markers = [];
   //console.log("eggs", eggs);
   for (var i = 0; i < randomPositions.length; i ++) {
     eggName = "egg" + String(i);
+    //console.log("randomPositions", randomPositions[i][0], i); 
     var egg = new google.maps.Marker({
       position: {lat: randomPositions[i][0], lng: randomPositions[i][1]},
       map: map,
@@ -15,10 +16,10 @@ function createEggs(){
     });
     //console.log("one egg title", egg.title);
     eggs.push(egg);
-    eggData.push(egg.title, egg.position);
-
+    eggData.push(egg.title, [egg.position.lat(), egg.position.lng()]);
+    // eggData = Array [ "egg0", [lat,lng], "egg1", ... ]
   }
-  //console.log("eggs", eggs);
+  
   publish(eggData, eggChannel);
 }
 
@@ -26,13 +27,15 @@ function createEggs(){
 function placeEggs(eggPositions){
   console.log("placeEggs()");
   //markers = [];
-  console.log("My eggdata (in place eggs)", eggPositions);
+  //console.log("My eggdata (in place eggs)", eggPositions);
   for (var i = 0; i < eggPositions.length; i +=2) {
     //console.log(eggData[i]);
     //console.log(eggData[i+1].lat);
+    console.log("PLACE EGGS() eggPositions[i+1]", eggPositions[i+1])
     eggName = eggPositions[i];
+    console.log("eggName", eggName, i);
     var egg = new google.maps.Marker({
-      position: {lat: eggPositions[i+1].lat, lng: eggPositions[i+1].lng},
+      position: {lat: eggPositions[i+1][0], lng: eggPositions[i+1][1]},
       map: map,
       title: eggName,
       animation: google.maps.Animation.DROP,
@@ -40,7 +43,7 @@ function placeEggs(eggPositions){
     });
     //console.log("one egg title", egg.title);
     eggs.push(egg);
-    eggData.push(egg.title, egg.position);
+    eggData.push(egg.title, [egg.position.lat(), egg.position.lng()]);
 
   }
   //console.log("eggs", eggs);
@@ -50,7 +53,7 @@ function placeEggs(eggPositions){
 var randomEggs = function() {
   randomPositions = [];
   for (var i = 0; i < 7; i ++) {
-    var r = 150/111300, // = 100 meters
+    var r = 100/111300, // = 100 meters
         y0 = 59.3475983,
         x0 = 18.073206,
         u = Math.random(),
@@ -89,21 +92,36 @@ var getLocation = function(){
           lat: position.coords.latitude,
           lng : position.coords.longitude
         };
-
-        
         updatePlayerMarker(currentPos);
-        //console.log('currentPos:')
-        //console.log(currentPos)
-
         publish(currentPos,positionChannel);
        
-        //return currentPos;
+        getEggs();
+        
         userDistance(position.coords.latitude, position.coords.longitude);
       }/*,
       function(error){
         console.log('Error: ',error);
       }*/
     )
+  }
+}
+
+var checkForEggs = function(remainingEggs) {
+  //läs av history för alla nuvarande ägg
+  //console.log("checkForEggs");
+  //console.log('REMAINING EGGS ARE ',remainingEggs);
+  for (i = 0; i < eggs.length; i++){
+    if (eggs[i] != "null"){
+      var currEgg = eggs[i];
+      var currEggName = currEgg.title;
+      //console.log("EGGNAME",currEggName);
+
+      if (remainingEggs.indexOf(currEggName) == -1) {
+        currEgg.setMap(null);
+        eggs.splice(i, 1, "null");
+        eggData.splice(i, 1, "null");
+      }
+    }
   }
 }
 
@@ -123,15 +141,18 @@ var userDistance = function(userLat, userLng) {
   //console.log("markers[i]", markers[i].position.lat());
   //console.log("egglängd", eggs.length);
   for (var j = 0; j < eggs.length; j ++) {
+    if(eggs[j] !== "null"){
     //console.log("userDistance");
-    var eggLat = eggs[j].position.lat();
-    var eggLng = eggs[j].position.lng();
+      console.log(eggs);
+      var eggLat = eggs[j].position.lat();
+      console.log(eggLat);
+      var eggLng = eggs[j].position.lng();
+      console.log(eggLng);
+      var eggTitle = eggs[j].title; //egg "object" in eggs that is chosen
+      getDistance(userLat, userLng, eggLat, eggLng, eggTitle);
     
-    var eggTitle = eggs[j].title; //egg "object" in eggs that is chosen
-    getDistance(userLat, userLng, eggLat, eggLng, eggTitle);
-    
+    }
   }
-  //}
 };
 
 
@@ -158,7 +179,7 @@ var count = 3;
 var countDown = function (){
   document.getElementById("waitingForPlayers").outerHTML = "";
   var countInterval = setInterval(function(){
-    console.log(count);
+    //console.log(count);
     if(count > -1) {
       document.getElementById("countDown").innerHTML = count;
       count = count - 1;

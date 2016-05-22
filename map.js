@@ -14,6 +14,8 @@ var playerReady = false;
 var gameStarted = false;
 var playerPositions = {};
 
+var clickedOnButton = false;
+
 
 // initializes the map
 function initMap() {
@@ -29,33 +31,8 @@ function initMap() {
   //initialPosition();
   
 }
-var initialPosition = function() {
-  //console.log('initialPosition()')
-  if (navigator.geolocation){
 
-    navigator.geolocation.getCurrentPosition(
-      function(position){
-        initialPos = {
-          lat: position.coords.latitude,
-          lng : position.coords.longitude
-        }
-        
-      });
-        //console.log('kör createPlayerMarker')
-        createPlayerMarker(initialPos);
-  }
-}
 
-var createPlayerMarker=function(initialPos){
-  //console.log('creating initial marker')
-  marker = new google.maps.Marker({
-    position: initialPos,
-    map: map,
-    title: 'Your position',
-    animation: google.maps.Animation.DROP,
-    icon: 'img/locationMarker.png'
-  });
-}
 
 //EMMAS FIL
 // not being used
@@ -93,12 +70,16 @@ var createPlayerMarker=function(initialPos){
 
 var startButt = document.getElementById("startButt");
 var usrAlias = document.getElementById("usrAlias");
-var startGame = true;
+var startGame = false;
 
 
 startButt.addEventListener('click', function(){
   getLocation();
   usrAlias = String(usrAlias.value);
+
+  clickedOnButton = true;
+
+  if (startGame === true) { 
 
   // doesn't start the game until the uuid is set
   setNewUUID(usrAlias, function(){
@@ -114,15 +95,15 @@ startButt.addEventListener('click', function(){
                 channel: eggChannel,
                 count: 1, 
                 callback: function(history) {
-                  console.log("The game is started",history[0][0].text);
-                  console.log("Let's try to place the eggs");
+                  //console.log("The game is started",history[0][0].text);
+                  //console.log("Let's try to place the eggs");
                   var eggPos = history[0][0].text;
                   if (eggPos != "newGame") {
                     placeEggs(eggPos);
                   }
                 }
               })
-              //publish("startNewGame",gameCtrlChannel);
+              
             } else {
               publish("startNewGame",gameCtrlChannel);
             }
@@ -131,7 +112,7 @@ startButt.addEventListener('click', function(){
   });
 
 
-  if (startGame === true) { //make button clickable and stuff
+  //make button clickable and stuff
     //hide startscreen
     document.getElementById("startScreen").innerHTML = ''+
         '<div id="waiting">'+
