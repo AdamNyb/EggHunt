@@ -55,12 +55,40 @@ var createPlayerMarker=function(initialPos){
     animation: google.maps.Animation.DROP,
     icon: 'img/locationMarker.png'
   });
+
+//EMMAS FIL
+// not being used
+// var initialPosition = function() {
+//   console.log('initialPosition()')
+//   if (navigator.geolocation){
+
+//     navigator.geolocation.getCurrentPosition(
+//       function(position){
+//         initialPos = {
+//           lat: position.coords.latitude,
+//           lng : position.coords.longitude
+//         }
+        
+//       });
+//         console.log('kör createPlayerMarker')
+//         createPlayerMarker(initialPos);
+//   }
+// }
+
+// not being used
+// var createPlayerMarker=function(initialPos){
+//   console.log('creating initial marker')
+//   marker = new google.maps.Marker({
+//     position: initialPos,
+//     map: map,
+//     title: 'Your position',
+//     animation: google.maps.Animation.DROP,
+//     icon: 'img/locationMarker.png'
+//   });
+
   
-}
+// }
 
-//decideDistance, for user position {for egg position}
-
-//getLocation();
 
 var startButt = document.getElementById("startButt");
 var usrAlias = document.getElementById("usrAlias");
@@ -70,18 +98,15 @@ var startGame = true;
 startButt.addEventListener('click', function(){
   getLocation();
   usrAlias = String(usrAlias.value);
-  /*if (usrAlias == "") {
-    usrAlias = 'Eggbert';
-  }*/
-  //console.log(usrAlias);
-  //game(usrAlias);
 
+  // doesn't start the game until the uuid is set
   setNewUUID(usrAlias, function(){
     //console.log("CALLBACKKKKK!!!!!");
     pubnub_data.history({
           channel: gameCtrlChannel,
           count: 1,
           callback: function(history) {
+            // controls if the game is already started, if so, don't start a new one
             console.log("YOYO, let's see if the game is already started", history[0][0].text);
             if (history[0][0].text == "gameStarted") {
               pubnub_data.history({
@@ -107,11 +132,19 @@ startButt.addEventListener('click', function(){
 
   if (startGame === true) { //make button clickable and stuff
     //hide startscreen
-    document.getElementById("startScreen").innerHTML = "";
-    document.getElementById("startScreen").setAttribute("style", "all: initial;*{all: unset;}");
+    document.getElementById("startScreen").innerHTML = ''+
+        '<div id="waiting">'+
+          '<div>'+
+            '<p id="waitingForPlayers">'+
+              'Waiting for other players...'+
+            '</p>'+
+            '<p id="countDown"></p>'+
+          '</div>'+
+       '</div>';
+    document.getElementById("waiting").setAttribute("style","display: table;width: 90%;top: 30%;position: fixed;z-index: 3;text-align: center;");
+    countDown();
 
-    document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
-    document.getElementById("gameUI").setAttribute("style", "display:block");
+   
 
     playerReady = true;
 

@@ -66,43 +66,13 @@ pubnub_data.channel_group_add_channel({
 });
 
 
-
-// // subscribes to channel group
-// pubnub_data.subscribe({
-//     channel_group: gameChannel_Group,
-//     callback: function(m){
-//         //console.log("subscribe callback",m);
-//     }
-// });
-
 pubnub_data.subscribe({
 	channel: ['eggChannel2','scoreChannel2','positionChannel2'],
 	callback: function(m) {}
 });
 
-// pubnub_data.subscribe({
-// 	channel: readyChannel,
-// 	message: function(message){
-// 		console.log("READYMSG");
-// 		console.log(message.text);
-// 		if (gameStarted == false || message.text[0] != "tom") {
-// 			if (message.text[0] == user.uuid) {
-// 				createEggs();
-// 			} else {
-// 				// look for already made eggs
-// 				pubnub_data.history({
-// 			      channel: eggChannel,
-// 			      count: 1,
-// 			      callback: function(history) {
-// 			      	placeEggs(history[0][0].text);
-// 			      }
-// 				});
-// 			}
-// 		}
-// 	}
-// })
-// publish("tom",readyChannel);
 
+// oklart om denna behövs.. den behövs ibland
 publish("YO",gameCtrlChannel);
 
 // listens to gameCtrlChannel
@@ -118,8 +88,8 @@ pubnub_data.subscribe({
 			console.log("THIS IS THE ONE WHO STARTED THE GAME: ",message.poster);
 			gameStarted = true;
 			publish("gameStarted",gameCtrlChannel);
+			// if I posted start game -> I will post newGame
 			if (message.poster == user.uuid) {
-				// if I posted start game -> I will post newGame
 				console.log("if I posted start game -> I will post newGame");
 				publish("newGame",eggChannel);
 			} else {
@@ -158,6 +128,7 @@ pubnub_data.subscribe({
 					}
 				}
 			})
+		// if someone has already started the game, and it wasn't me, I'll try to place out their eggs
 		} else if ( message.text == "gameStarted" && message.poster != user.uuid ) {
 			pubnub_data.history({
 				channel: eggChannel,
@@ -181,6 +152,7 @@ pubnub_data.subscribe({
 })
 
 // listen to the egg channel
+// decides whether I should create my own egss or place someone else's
 pubnub_data.subscribe({
 	channel: eggChannel,
 	message: function(message) {
@@ -210,6 +182,7 @@ pubnub_data.subscribe({
 	}
 })
 
+// listens to score channel, updates the score 
 pubnub_data.subscribe({
 	channel: scoreChannel,
 	message: function(message) {
@@ -224,6 +197,9 @@ pubnub_data.subscribe({
 	}
 })
 
+// litstens to the postioin channel
+// if the position is another player's, update that player's position, or give them a new marker
+// if the position is mine, update my marker
 pubnub_data.subscribe({
 	channel: positionChannel,
 	message: function(message) {
@@ -236,8 +212,10 @@ pubnub_data.subscribe({
 			playerPositions = {};
 		} else {
 			console.log("positionChannel recieved a message", message);
+			// if it's my position
 			if ( message.poster == user.uuid ) {
 				console.log("MY POSITION!");
+			// if it someone else's position
 			} else if ( message.poster != user.uuid ) {
 				// if the player doesn't have a marker
 				if ( playerPositions[message.poster] == undefined || playerPositions[message.poster] == null ) {
@@ -266,12 +244,6 @@ pubnub_data.subscribe({
 	}
 });
 
-// när sidan laddas, kolla om det finns eggPositions i eggkanalen
-// om det inte finns, skapa egna egg
-// om det finns, kolla om den som skapade är online
-// om den är online, använd de existerande
-
-
 // Get List of Occupants and Occupancy Count.
 pubnub_data.here_now({
 	channel_group: gameChannel_Group,
@@ -283,27 +255,6 @@ pubnub_data.here_now({
 		}
 	}
 });
-
-
-// pubnub_data.subscribe({
-// 	channel: eggChannel,
-// 	//noheresync: true,
-// 	message: function(m){
-// 		console.log("Message");
-// 		console.log(m);
-// 	},
-// 	presence: function(m) {
-// 		//console.log("presence");
-// 		if (m.action == 'join') {
-// 			console.log("someone joined!");
-// 			console.log(m);
-// 			scoreboard[m.uuid] = 0;
-// 			publish(scoreboard,scoreChannel);
-// 		} else if (m.action == 'leave') {
-// 			console.log("someone left!");
-// 		}
-// 	}
-// });
 
 
 function publish(text,channel,poster) {
@@ -328,14 +279,6 @@ function publish(text,channel,poster) {
 	});
 }
 
-
-var Sthlm = {lat: 59.332595, lng: 18.065193};
-var Sthlm2 = {lat: 59.329339, lng: 18.068701};
-var KTH = {lat: 59.349877, lng: 18.070535};
-var eggPos = [KTH,Sthlm,Sthlm2];
-//publish(eggPos,eggChannel);
-//var test = [12,14,19,15];
-//publish(test,eggChannel);
 
 function removeEgg(takenEgg) {
 	// hides taken eggs from the map

@@ -1,6 +1,5 @@
 // creates eggs
 function createEggs(){
-  //console.log("createEggs()");
   randomPositions = randomEggs();
 
   //markers = [];
@@ -68,10 +67,6 @@ var randomEggs = function() {
   //console.log("random", randomPositions); 
   return randomPositions;
 }
-
-
-
-
 
 
 var getLocation = function(){
@@ -157,6 +152,26 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   }
   //console.log("distance:", distance);
 }
+var count = 3;
+
+var countDown = function (){
+  document.getElementById("waitingForPlayers").outerHTML = "";
+  var countInterval = setInterval(function(){
+    console.log(count);
+    if(count > -1) {
+      document.getElementById("countDown").innerHTML = count;
+      count = count - 1;
+    }
+    else{
+      document.getElementById("countDown").innerHTML = "";
+      document.getElementById("startScreen").setAttribute("style", "all: initial;*{all: unset;}");
+
+      document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
+      document.getElementById("gameUI").setAttribute("style", "display:block");
+      clearInterval(countInterval);//stop the loop
+    }
+  }, 1000);
+};
 
 var vibrate = function(){
   if (navigator.vibrate) {
