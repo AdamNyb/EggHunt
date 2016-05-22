@@ -2,7 +2,7 @@
 // some locations
 var Sthlm = {lat: 59.332595, lng: 18.065193};
 var Sthlm2 = {lat: 59.329339, lng: 18.068701};
-var KTH = {lat: 59.346667, lng: 18.0702473};
+var KTH = {lat: 59.347451, lng: 18.073773};
 var newPlace = {lat: 59.3475983, lng: 18.073206};
 var map;
 var eggs = [];
@@ -20,7 +20,7 @@ var clickedOnButton = false;
 // initializes the map
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    center: newPlace,
+    center: KTH,
     zoom: 17,
     mapTypeId: google.maps.MapTypeId.HYBRID, // sets the map type
     disableDefaultUI:true

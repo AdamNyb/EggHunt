@@ -41,9 +41,9 @@ function placeEggs(eggPositions){
 var randomEggs = function() {
   randomPositions = [];
   for (var i = 0; i < 7; i ++) {
-    var r = 100/111300, // = 100 meters
-        y0 = 59.3475983,
-        x0 = 18.073206,
+    var r = 50/111300, // = 100 meters
+        y0 = 59.347451,
+        x0 = 18.073773,
         u = Math.random(),
         v = Math.random(),
         w = r * Math.sqrt(u),
@@ -133,7 +133,7 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
     Math.sin(dLong / 2) * Math.sin(dLong / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
-  if (distance < 15) {
+  if (distance < 10) {
     removeEgg(eggTitle);
     updateMyScore()
     vibrate();
