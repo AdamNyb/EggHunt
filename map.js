@@ -9,7 +9,10 @@ var eggs = [];
 var eggData = [];
 var marker;
 var initialPos;
+var readyPlayers = [];
 var playerReady = false;
+var gameStarted = false;
+var playerPositions = {};
 
 
 // initializes the map
@@ -23,13 +26,41 @@ function initMap() {
   map.setTilt(45);
 
 
-  // creates the other controls
+  //initialPosition();
   
 }
 
-//decideDistance, for user position {for egg position}
+// not being used
+// var initialPosition = function() {
+//   console.log('initialPosition()')
+//   if (navigator.geolocation){
 
-//getLocation();
+//     navigator.geolocation.getCurrentPosition(
+//       function(position){
+//         initialPos = {
+//           lat: position.coords.latitude,
+//           lng : position.coords.longitude
+//         }
+        
+//       });
+//         console.log('kör createPlayerMarker')
+//         createPlayerMarker(initialPos);
+//   }
+// }
+
+// not being used
+// var createPlayerMarker=function(initialPos){
+//   console.log('creating initial marker')
+//   marker = new google.maps.Marker({
+//     position: initialPos,
+//     map: map,
+//     title: 'Your position',
+//     animation: google.maps.Animation.DROP,
+//     icon: 'img/locationMarker.png'
+//   });
+  
+// }
+
 
 var startButt = document.getElementById("startButt");
 var usrAlias = document.getElementById("usrAlias");
@@ -37,15 +68,39 @@ var startGame = true;
 
 
 startButt.addEventListener('click', function(){
-  usrAlias = String(usrAlias.value);
-  if (usrAlias == "") {
-    usrAlias = 'Eggbert';
-  }
-  console.log(usrAlias);
-  //game(usrAlias);
-  setNewUUID(usrAlias);
-  initialPosition();
   getLocation();
+  usrAlias = String(usrAlias.value);
+
+  // doesn't start the game until the uuid is set
+  setNewUUID(usrAlias, function(){
+    console.log("CALLBACKKKKK!!!!!");
+    pubnub_data.history({
+          channel: gameCtrlChannel,
+          count: 1,
+          callback: function(history) {
+            // controls if the game is already started, if so, don't start a new one
+            console.log("YOYO, let's see if the game is already started", history[0][0].text);
+            if (history[0][0].text == "gameStarted") {
+              pubnub_data.history({
+                channel: eggChannel,
+                count: 1, 
+                callback: function(history) {
+                  console.log("The game is started",history[0][0].text);
+                  console.log("Let's try to place the eggs");
+                  var eggPos = history[0][0].text;
+                  if (eggPos != "newGame") {
+                    placeEggs(eggPos);
+                  }
+                }
+              })
+              //publish("startNewGame",gameCtrlChannel);
+            } else {
+              publish("startNewGame",gameCtrlChannel);
+            }
+          }
+        });
+  });
+
 
   if (startGame === true) { //make button clickable and stuff
     //hide startscreen
@@ -65,22 +120,8 @@ startButt.addEventListener('click', function(){
     document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
     document.getElementById("gameUI").setAttribute("style", "display:block");*/
 
-    console.log(usrAlias);
-    //game(usrAlias);
-    setNewUUID(usrAlias);
-    publish(scoreboard,scoreChannel);
     playerReady = true;
 
-    pubnub_data.history({
-      channel: readyChannel,
-      count: 1,
-      callback: function(history) {
-        var scoreboard = history[0][0].text;
-        console.log("Ready history: ",scoreboard);
-        addScore(scoreboard);
-      }
-    })
 
-    createEggs();
   }
 });

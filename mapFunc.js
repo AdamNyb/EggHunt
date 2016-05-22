@@ -22,6 +22,31 @@ function createEggs(){
   publish(eggData, eggChannel);
 }
 
+
+function placeEggs(eggPositions){
+  console.log("placeEggs()");
+  //markers = [];
+  console.log("My eggdata (in place eggs)", eggPositions);
+  for (var i = 0; i < eggPositions.length; i +=2) {
+    //console.log(eggData[i]);
+    //console.log(eggData[i+1].lat);
+    eggName = eggPositions[i];
+    var egg = new google.maps.Marker({
+      position: {lat: eggPositions[i+1].lat, lng: eggPositions[i+1].lng},
+      map: map,
+      title: eggName,
+      animation: google.maps.Animation.DROP,
+      icon: 'img/egg-app-icon.gif',
+    });
+    //console.log("one egg title", egg.title);
+    eggs.push(egg);
+    eggData.push(egg.title, egg.position);
+
+  }
+  //console.log("eggs", eggs);
+  //publish(eggData, eggChannel);
+}
+
 var randomEggs = function() {
   randomPositions = [];
   for (var i = 0; i < 7; i ++) {
@@ -43,43 +68,18 @@ var randomEggs = function() {
   return randomPositions;
 }
 
-var initialPosition = function() {
-  console.log('initialPosition()')
-  if (navigator.geolocation){
 
-    navigator.geolocation.getCurrentPosition(
-      function(position){
-        initialPos = {
-          lat: position.coords.latitude,
-          lng : position.coords.longitude
-        }
-        
-      });
-        console.log('kör createPlayerMarker')
-        createPlayerMarker(initialPos);
-  }
-}
+var getLocation = function(){
+  console.log('getLocation()');
 
-
-
-var createPlayerMarker=function(initialPos){
-  console.log('creating initial marker')
+  console.log('creating user marker');
   marker = new google.maps.Marker({
-    position: initialPos,
+    position: null,
     map: map,
     title: 'Your position',
     animation: google.maps.Animation.DROP,
     icon: 'img/locationMarker.png'
   });
-  
-    
-}
-
-
-
-
-var getLocation = function(){
-  console.log('getLocation()')
   
 
   if (navigator.geolocation){
@@ -92,7 +92,11 @@ var getLocation = function(){
 
         
         updatePlayerMarker(currentPos);
+        //console.log('currentPos:')
+        //console.log(currentPos)
 
+        publish(currentPos,positionChannel);
+       
         //return currentPos;
         userDistance(position.coords.latitude, position.coords.longitude);
       }/*,
@@ -104,8 +108,8 @@ var getLocation = function(){
 }
 
 var updatePlayerMarker = function(currentPos) {
-  console.log("updatePlayerMarker()");
-  console.log("currentPos", currentPos);
+  //console.log("updatePlayerMarker()");
+  //console.log("currentPos", currentPos);
   marker.setPosition(currentPos);
 }
 
@@ -140,6 +144,12 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
     Math.sin(dLong / 2) * Math.sin(dLong / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
+  if (distance < 15) {
+    console.log("SCOOOOORE!!!");
+    //console.log("egg title", eggTitle);
+    removeEgg(eggTitle);
+    vibrate();
+  }
   //console.log("distance:", distance);
 }
 var count = 3;
@@ -168,12 +178,6 @@ var vibrate = function(){
  
 }
 
-  if (distance < 15) {
-    //console.log("SHORT DISTANCE!!!");
-    //console.log("egg title", eggTitle);
-    removeEgg(eggTitle);
-    vibrate();
-  }
 
   //var distance = getDistance(sq1Lat, sq1Lng, sq2Lat, sq2Lng).toFixed(2)
   //return distance; // returns the distance in meter
