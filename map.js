@@ -26,47 +26,8 @@ function initMap() {
     disableDefaultUI:true
   });
   map.setTilt(45);
-
-
-  //initialPosition();
   
 }
-
-
-
-//EMMAS FIL
-// not being used
-// var initialPosition = function() {
-//   console.log('initialPosition()')
-//   if (navigator.geolocation){
-
-//     navigator.geolocation.getCurrentPosition(
-//       function(position){
-//         initialPos = {
-//           lat: position.coords.latitude,
-//           lng : position.coords.longitude
-//         }
-        
-//       });
-//         console.log('kör createPlayerMarker')
-//         createPlayerMarker(initialPos);
-//   }
-// }
-
-// not being used
-// var createPlayerMarker=function(initialPos){
-//   console.log('creating initial marker')
-//   marker = new google.maps.Marker({
-//     position: initialPos,
-//     map: map,
-//     title: 'Your position',
-//     animation: google.maps.Animation.DROP,
-//     icon: 'img/locationMarker.png'
-//   });
-
-  
-// }
-
 
 var startButt = document.getElementById("startButt");
 var usrAlias = document.getElementById("usrAlias");
@@ -83,20 +44,16 @@ startButt.addEventListener('click', function(){
 
   // doesn't start the game until the uuid is set
   setNewUUID(usrAlias, function(){
-    //console.log("CALLBACKKKKK!!!!!");
     pubnub_data.history({
           channel: gameCtrlChannel,
           count: 1,
           callback: function(history) {
             // controls if the game is already started, if so, don't start a new one
-            console.log("YOYO, let's see if the game is already started", history[0][0].text);
             if (history[0][0].text == "gameStarted") {
               pubnub_data.history({
                 channel: eggChannel,
                 count: 1, 
                 callback: function(history) {
-                  //console.log("The game is started",history[0][0].text);
-                  //console.log("Let's try to place the eggs");
                   var eggPos = history[0][0].text;
                   if (eggPos != "newGame") {
                     placeEggs(eggPos);

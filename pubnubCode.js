@@ -51,7 +51,6 @@ function setNewUUID(usrAlias, callback) {
 	    //return uuid; 
 	})();
 	
-	console.log("User uuid",user.uuid);
 	callback();
 }
 
@@ -88,44 +87,15 @@ publish("YO",gameCtrlChannel);
 pubnub_data.subscribe({
 	channel: gameCtrlChannel,
 	message: function(message) {
-		//console.log("listening to gameCtrlChannel, and we recieved a message!");
-		//console.log(message.text);
 		if ( message.text == "startNewGame" && gameStarted == false ) {
 			// starts new game, and resets all the other channels
-			//console.log("WE HAVE STARTED A NEW GAME!!!!!!!!");
-			//console.log("THIS IS THE ONE WHO STARTED THE GAME: ",message.poster);
 			gameStarted = true;
 			publish("gameStarted",gameCtrlChannel);
 			// if I posted start game -> I will post newGame
 			if (message.poster == user.uuid) {
-				//console.log("if I posted start game -> I will post newGame");
 				//publish("newGame",eggChannel);
-				console.log("You are the first to enter");
 				createEggs();
-			} /*else {
-				console.log("You are NOT the first to enter");
-				// checks if the last message is "newGame"
-				// if so, don't post a new "newGame" message
-				// no
-				// checks egg postiosns and places them
-				pubnub_data.history({
-					channel: eggChannel,
-					count: 1,
-					callback: function(history) {
-						if (clickedOnButton == true) {
-							//console.log("history[0]...", history[0][0].text);
-							//console.log("EGG......: I didn't start the game so I will read egg positions");
-							var eggPosition = history[0][0].text;
-	
-							//var engLng = history.text
-							//console.log("eggLng", eggLng);
-							//console.log("EGGPOS", eggPos);
-							//console.log("EGG.....: This is the egg positoins I'm trying to use: ",eggPos);
-							placeEggs(eggPosition);
-						}
-					}
-				})
-			}*/
+			} 
 			pubnub_data.history({
 				channel: positionChannel,
 				count: 1,
@@ -279,8 +249,6 @@ pubnub_data.subscribe({
 pubnub_data.here_now({
 	channel_group: gameChannel_Group,
 	callback: function (m) {
-		//console.log("Occupancy: ");
-		//console.log(m);
 		if (m.total_occupancy > 4) { //4 channels means number of players = m*4
 			gameReady();
 		}
@@ -293,10 +261,6 @@ function publish(text,channel,poster) {
 	if (!poster) {
 		var poster = user.uuid;
 	}
-	//console.log("I'm gonna post this, to channel:",channel);
-	//console.log(text);
-	//console.log("This is the poster:",poster);
-
 	 // PubNub Publish API
 	pubnub_data.publish({
 	  channel: channel,
@@ -305,7 +269,6 @@ function publish(text,channel,poster) {
 	    text: text
 	  },
 	  callback: function(m) {
-	    //console.log(m);
 	  }
 	});
 }
@@ -319,24 +282,17 @@ function removeEgg(takenEgg) {
 	//takenEgg.setVisible(false);
 	for (var i = 0; i < eggs.length; i ++) {
 		var currEgg = eggs[i];
-		//console.log("curreEgg", currEgg);
 		if (currEgg.title == takenEgg) {
 			currEgg.setMap(null);
 			eggs.splice(i, 1, "null");
 			eggData.splice(i, 1, "null");
 		}
 	}
-	//getScoreboard();
-
 	pubnub_data.history({
 		channel: eggChannel,
 		count: 1,
 		callback: function(history) {
-			//console.log("Channel history: ",history);
 			pubnub_data.each(history[0], function(m) {
-		    	//console.log("Latest message:");
-		    	//console.log(m.text);
-		    	//console.log(m.text.lng);
 		    });
 			updateEggPositions(takenEgg, history)
 		}
@@ -344,19 +300,12 @@ function removeEgg(takenEgg) {
 }
 
 function updateEggPositions(takenEgg, oldPositions) {
-	//console.log("updateEggPositions");
 	oldPositions = oldPositions[0][0].text;
-	//console.log("Old positions", oldPositions);
-
-	//console.log("taken egg:", takenEgg);
-	//console.log("index of:", oldPositions.indexOf(takenEgg));
 	var indexToRemove = oldPositions.indexOf(takenEgg);
 	if (indexToRemove > -1) {
 		// splice DOES NOT seem to work with objects
 		oldPositions.splice(indexToRemove, 1, "null"); //removes 1 element on index 'indexToRemove'
-		var newPositions = oldPositions;
-		//console.log("New eggPos",newPositions);
-		
+		var newPositions = oldPositions;	
 		//posts the new positions to channel
 		publish(newPositions,eggChannel);
 	}
@@ -374,19 +323,12 @@ function getEggs() {
 			remainingEggs1 = history[0][0].text;
 			remainingEggs = [];
 			for (i = 0; i < remainingEggs1.length; i += 2){
-				
-	
 				eggname = remainingEggs1[i]
-				remainingEggs.push(eggname);
-				console.log(eggname);
-				
+				remainingEggs.push(eggname);		
 			}
 			checkForEggs(remainingEggs);
 		}
 	});
-
-
-
 	
 }
 
@@ -396,18 +338,12 @@ function getEggs() {
 
 
 function updateMyScore() {
-	console.log('UPDATE MY SCORE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-	//myScore.innerHTML = '10';
 	var myScore = document.getElementById("myScore").innerHTML;
-	console.log('asdsadsad',myScore)
-
 	var myScore = parseInt(myScore);
 	myScore = myScore+1;
 	if (myScore == 4){
 		poster=user.uuid.split('-')[0]
 		publish(poster,winnerChannel);
-		
-
 	}
 	myScore.toString()
 	document.getElementById("myScore").innerHTML= myScore;
@@ -422,4 +358,3 @@ function updateMyScore() {
 function gameReady() {
 	startGame = true;
 }
-//getScoreboard();

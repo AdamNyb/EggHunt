@@ -2,8 +2,6 @@
 function createEggs(){
   randomPositions = randomEggs();
   //randomPositions = [[59.347425, 18.072734], [59.347538, 18.073198]];
-  //markers = [];
-  //console.log("eggs", eggs);
   for (var i = 0; i < randomPositions.length; i ++) {
     eggName = "egg" + String(i);
     //console.log("randomPositions", randomPositions[i][0], i); 
@@ -14,7 +12,6 @@ function createEggs(){
       animation: google.maps.Animation.DROP,
       icon: 'img/egg-app-icon.gif',
     });
-    //console.log("one egg title", egg.title);
     eggs.push(egg);
     eggData.push(egg.title, [egg.position.lat(), egg.position.lng()]);
     // eggData = Array [ "egg0", [lat,lng], "egg1", ... ]
@@ -26,14 +23,8 @@ function createEggs(){
 
 function placeEggs(eggPositions){
   console.log("placeEggs()");
-  //markers = [];
-  //console.log("My eggdata (in place eggs)", eggPositions);
   for (var i = 0; i < eggPositions.length; i +=2) {
-    //console.log(eggData[i]);
-    //console.log(eggData[i+1].lat);
-    console.log("PLACE EGGS() eggPositions[i+1]", eggPositions[i+1])
     eggName = eggPositions[i];
-    console.log("eggName", eggName, i);
     var egg = new google.maps.Marker({
       position: {lat: eggPositions[i+1][0], lng: eggPositions[i+1][1]},
       map: map,
@@ -41,13 +32,10 @@ function placeEggs(eggPositions){
       animation: google.maps.Animation.DROP,
       icon: 'img/egg-app-icon.gif',
     });
-    //console.log("one egg title", egg.title);
     eggs.push(egg);
     eggData.push(egg.title, [egg.position.lat(), egg.position.lng()]);
 
   }
-  //console.log("eggs", eggs);
-  //publish(eggData, eggChannel);
 }
 
 var randomEggs = function() {
@@ -67,15 +55,11 @@ var randomEggs = function() {
         newX = x0 + x1
         randomPositions.push([newY, newX])
   }
-  //console.log("random", randomPositions); 
   return randomPositions;
 }
 
 
 var getLocation = function(){
-  //console.log('getLocation()');
-
-  //console.log('creating user marker');
   marker = new google.maps.Marker({
     position: null,
     map: map,
@@ -98,23 +82,17 @@ var getLocation = function(){
         getEggs();
         
         userDistance(position.coords.latitude, position.coords.longitude);
-      }/*,
-      function(error){
-        console.log('Error: ',error);
-      }*/
+      }
     )
   }
 }
 
 var checkForEggs = function(remainingEggs) {
   //läs av history för alla nuvarande ägg
-  //console.log("checkForEggs");
-  //console.log('REMAINING EGGS ARE ',remainingEggs);
   for (i = 0; i < eggs.length; i++){
     if (eggs[i] != "null"){
       var currEgg = eggs[i];
       var currEggName = currEgg.title;
-      //console.log("EGGNAME",currEggName);
 
       if (remainingEggs.indexOf(currEggName) == -1) {
         currEgg.setMap(null);
@@ -126,8 +104,6 @@ var checkForEggs = function(remainingEggs) {
 }
 
 var updatePlayerMarker = function(currentPos) {
-  //console.log("updatePlayerMarker()");
-  //console.log("currentPos", currentPos);
   marker.setPosition(currentPos);
 }
 
@@ -136,18 +112,10 @@ var rad = function(x) {
 };
 
 var userDistance = function(userLat, userLng) {
-  //console.log("userDistanceMarkers", markers);
-  //for (i = 0; i < userPositions.length; i++) {
-  //console.log("markers[i]", markers[i].position.lat());
-  //console.log("egglängd", eggs.length);
   for (var j = 0; j < eggs.length; j ++) {
     if(eggs[j] !== "null"){
-    //console.log("userDistance");
-      console.log(eggs);
       var eggLat = eggs[j].position.lat();
-      console.log(eggLat);
       var eggLng = eggs[j].position.lng();
-      console.log(eggLng);
       var eggTitle = eggs[j].title; //egg "object" in eggs that is chosen
       getDistance(userLat, userLng, eggLat, eggLng, eggTitle);
     
@@ -166,13 +134,10 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
   if (distance < 15) {
-    //console.log("SCOOOOORE!!!");
-    //console.log("egg title", eggTitle);
     removeEgg(eggTitle);
     updateMyScore()
     vibrate();
   }
-  //console.log("distance:", distance);
 }
 var count = 3;
 
