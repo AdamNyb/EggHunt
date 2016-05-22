@@ -2,12 +2,15 @@ var eggChannel = 'eggChannel24';
 var scoreChannel = 'scoreChannel24';
 var positionChannel = 'positionChannel24';
 var readyChannel = 'readyChannel24';
+var winnerChannel = 'winnerChannel24';
 var gameCtrlChannel = 'gameCtrlChannel24';
 var gameChannel_Group = 'gameChannel_Group24';
 var user = {
 	uuid: generateUUID(usrAlias)
 };
 var scoreboard = {};
+
+var poster;
 
 
 var pubnub_data = PUBNUB.init({ // initializes pubnub
@@ -125,6 +128,12 @@ pubnub_data.subscribe({
 				callback: function(history) {
 					if (history[0][0].text != "newGame") {
 						publish("newGame",scoreChannel);
+					if (history[0][0].text=='winner'){
+					swal({   title: "WE HAVE A WINNER!!",   text: history[0][0].poster,   imageUrl: "https://media.giphy.com/media/pqZSDrEjCwdGw/giphy.gif" });
+
+					}
+
+
 					}
 				}
 			})
@@ -192,8 +201,15 @@ pubnub_data.subscribe({
 			publish(blankScoreboard,scoreChannel);
 		} else {
 			scoreboard = message.text;
-			updateMyScore(scoreboard);
+			//updateMyScore(scoreboard);
 		}
+	}
+})
+pubnub_data.subscribe({
+	channel: winnerChannel,
+	message: function(message) {
+		swal({   title: "WE HAVE A WINNER!!",   text: message.text,   imageUrl: "https://media.giphy.com/media/pqZSDrEjCwdGw/giphy.gif" });
+		
 	}
 })
 
@@ -295,7 +311,8 @@ function removeEgg(takenEgg) {
 			eggData.splice(i, 1);
 		}
 	}
-	getScoreboard();
+	//getScoreboard();
+	
 	pubnub_data.history({
 		channel: eggChannel,
 		count: 1,
@@ -334,39 +351,46 @@ function updateEggPositions(takenEgg, oldPositions) {
 //removeEgg(Sthlm);
 
 
-function getScoreboard() {
-	pubnub_data.history({
-		channel: scoreChannel,
-		count: 1,
-		callback: function(history) {
-			var scoreboard = history[0][0].text;
-			//console.log("SCore history: ",scoreboard);
-			addScore(scoreboard);
-		}
-	})
-}
+// function getScoreboard() {
+// 	pubnub_data.history({
+// 		channel: scoreChannel,
+// 		count: 1,
+// 		callback: function(history) {
+// 			console.log('HÄÄÄÄÄR')
+// 			console.log(history[0])
+// 			var scoreboard = history[0][0].text;
+// 			//console.log("SCore history: ",scoreboard);
+// 			addScore(scoreboard);
+// 		}
+// 	})
+// }
 
 
-function addScore(scoreboard) {
+function addScore() {
 	//console.log("Let's rint out MY score");
-	//console.log(scoreboard);
+	console.log('ADD SCORE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 	//console.log(scoreboard[user.uuid]);
-	if (scoreboard[user.uuid] == null ) {
-		scoreboard[user.uuid] = 0;
-	}
-	scoreboard[user.uuid] = Number(scoreboard[user.uuid]) + 1;
-	//console.log("MY NEW score");
-	//console.log(scoreboard[user.uuid]);
-	publish(scoreboard,scoreChannel);
-	updateMyScore(scoreboard);
+	
 }
 
-function updateMyScore(scoreboard) {
-	var myScore = document.getElementById('myScore');
-	if (scoreboard[user.uuid] == undefined) {
-		scoreboard[user.uuid] = 0;
+function updateMyScore() {
+	console.log('UPDATE MY SCORE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+	//myScore.innerHTML = '10';
+	var myScore = document.getElementById("myScore").innerHTML;
+	console.log('asdsadsad',myScore)
+
+	var myScore = parseInt(myScore);
+	myScore = myScore+1;
+	if (myScore == 4){
+		poster=user.uuid.split('-')[0]
+		publish(poster,winnerChannel);
+		
+
 	}
-	myScore.innerHTML = scoreboard[user.uuid];
+	myScore.toString()
+	document.getElementById("myScore").innerHTML= myScore;
+
+	
 }
 
 

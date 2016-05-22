@@ -55,6 +55,7 @@ var createPlayerMarker=function(initialPos){
     animation: google.maps.Animation.DROP,
     icon: 'img/locationMarker.png'
   });
+}
 
 //EMMAS FIL
 // not being used
