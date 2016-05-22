@@ -115,10 +115,8 @@ startButt.addEventListener('click', function(){
        '</div>';
     document.getElementById("waiting").setAttribute("style","display: table;width: 90%;top: 30%;position: fixed;z-index: 3;text-align: center;");
     countDown();
-    /*document.getElementById("startScreen").setAttribute("style", "all: initial;*{all: unset;}");
 
-    document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
-    document.getElementById("gameUI").setAttribute("style", "display:block");*/
+   
 
     playerReady = true;
 

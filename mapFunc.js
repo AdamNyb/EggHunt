@@ -162,12 +162,15 @@ var countDown = function (){
       document.getElementById("countDown").innerHTML = count;
       count = count - 1;
     }
+    else{
+      document.getElementById("countDown").innerHTML = "";
+      document.getElementById("startScreen").setAttribute("style", "all: initial;*{all: unset;}");
+
+      document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
+      document.getElementById("gameUI").setAttribute("style", "display:block");
+    }
   }, 1000);
 
-
-}
-
-var printCountDown = function () {
 
 }
 
