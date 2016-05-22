@@ -49,11 +49,21 @@ startButt.addEventListener('click', function(){
 
   if (startGame === true) { //make button clickable and stuff
     //hide startscreen
-    document.getElementById("startScreen").innerHTML = "";
-    document.getElementById("startScreen").setAttribute("style", "all: initial;*{all: unset;}");
+    document.getElementById("startScreen").innerHTML = ''+
+        '<div id="waiting">'+
+          '<div>'+
+            '<p id="waitingForPlayers">'+
+              'Waiting for other players...'+
+            '</p>'+
+            '<p id="countDown"></p>'+
+          '</div>'+
+       '</div>';
+    document.getElementById("waiting").setAttribute("style","display: table;width: 90%;top: 30%;position: fixed;z-index: 3;text-align: center;");
+    countDown();
+    /*document.getElementById("startScreen").setAttribute("style", "all: initial;*{all: unset;}");
 
     document.getElementById("map").setAttribute("style", "z-index:2;position: relative;overflow: hidden;transform: translateZ(0px);background-color: rgb(229, 227, 223);display:block");
-    document.getElementById("gameUI").setAttribute("style", "display:block");
+    document.getElementById("gameUI").setAttribute("style", "display:block");*/
 
     console.log(usrAlias);
     //game(usrAlias);

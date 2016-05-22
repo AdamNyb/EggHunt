@@ -142,6 +142,24 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var distance = R * c;
   //console.log("distance:", distance);
 }
+var count = 3;
+
+var countDown = function (){
+  document.getElementById("waitingForPlayers").outerHTML = "";
+  setInterval(function(){
+    console.log(count);
+    if(count > -1) {
+      document.getElementById("countDown").innerHTML = count;
+      count = count - 1;
+    }
+  }, 1000);
+
+
+}
+
+var printCountDown = function () {
+
+}
 
 var vibrate = function(){
   if (navigator.vibrate) {
