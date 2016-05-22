@@ -113,13 +113,14 @@ startButt.addEventListener('click', function(){
     //hide startscreen
     document.getElementById("startScreen").innerHTML = ''+
         '<div id="waiting">'+
-          '<div>'+
+          '<div id="countDown">'+
             '<p id="waitingForPlayers">'+
               'Waiting for other players...'+
             '</p>'+
-            '<p id="countDown"></p>'+
+            '<p  ></p>'+
           '</div>'+
        '</div>';
+    document.getElementById("countDown").setAttribute("style", "font-family: sketch !important;color: white;vertical-align: middle;text-align: center;display: table-cell;font-size: 200px; -webkit-text-stroke-width: 2px;-webkit-text-stroke-color: #343434;");
     document.getElementById("waiting").setAttribute("style","display: table;width: 90%;top: 30%;position: fixed;z-index: 3;text-align: center;");
     countDown();
 
