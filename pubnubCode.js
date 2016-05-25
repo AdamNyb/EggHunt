@@ -93,8 +93,7 @@ pubnub_data.subscribe({
 			publish("gameStarted",gameCtrlChannel);
 			// if I posted start game -> I will post newGame
 			if (message.poster == user.uuid) {
-				//publish("newGame",eggChannel);
-				createEggs();
+				createEggs(); //when start game, create new eggs
 			} 
 			pubnub_data.history({
 				channel: positionChannel,
@@ -181,7 +180,6 @@ pubnub_data.subscribe({
 	channel: scoreChannel,
 	message: function(message) {
 		if ( message.text == "newGame" ) {
-			//console.log("Scorechannels starts new game");
 			var blankScoreboard = {};
 			publish(blankScoreboard,scoreChannel);
 		} else {
@@ -198,7 +196,7 @@ pubnub_data.subscribe({
 	}
 })
 
-// litstens to the postion channel
+// listens to the postion channel
 // if the position is another player's, update that player's position, or give them a new marker
 // if the position is mine, update my marker
 pubnub_data.subscribe({
@@ -206,21 +204,16 @@ pubnub_data.subscribe({
 	message: function(message) {
 		// kolla om ny position inte är min nya
 		// uppdatera denna markers position
-		//console.log("These are the playerPositions");
-		//console.log(playerPositions);
 		if ( message.text == "newGame" ) {
 			// empty playerpositions
 			playerPositions = {};
 		} else {
-			//console.log("positionChannel recieved a message", message);
 			// if it's my position
 			if ( message.poster == user.uuid ) {
-				//console.log("MY POSITION!");
 			// if it someone else's position
 			} else if ( message.poster != user.uuid ) {
 				// if the player doesn't have a marker
 				if ( playerPositions[message.poster] == undefined || playerPositions[message.poster] == null ) {
-					//console.log("the player doesn't have a marker, let's create a new one", message.poster);
 					// creates new marker
 					var otherPlayer = new google.maps.Marker({
 				      position: {lat: message.text.lat, lng: message.text.lng},
@@ -233,7 +226,6 @@ pubnub_data.subscribe({
 					playerPositions[message.poster] = otherPlayer;
 				} else { // the player already has a marker
 					// update markers position
-					//console.log("The player HAS a marker, let's update it");
 					var currentPos = {
 						lat: message.text.lat,
 						lng: message.text.lng
@@ -277,15 +269,12 @@ function publish(text,channel,poster) {
 function removeEgg(takenEgg) {
 	// hides taken eggs from the map
 	// tells egg channel which eggs are still in the game
-
-	// if the eggs are marker objects, simply hide the marker:
-	//takenEgg.setVisible(false);
 	for (var i = 0; i < eggs.length; i ++) {
 		var currEgg = eggs[i];
 		if (currEgg.title == takenEgg) {
 			currEgg.setMap(null);
-			eggs.splice(i, 1, "null");
-			eggData.splice(i, 1, "null");
+			eggs.splice(i, 1, "null"); //set null in marker list
+			eggData.splice(i, 1, "null"); //set null in data list
 		}
 	}
 	pubnub_data.history({
@@ -300,21 +289,20 @@ function removeEgg(takenEgg) {
 }
 
 function updateEggPositions(takenEgg, oldPositions) {
+	//publishes the remaining eggs to the eggChannel
 	oldPositions = oldPositions[0][0].text;
 	var indexToRemove = oldPositions.indexOf(takenEgg);
 	if (indexToRemove > -1) {
-		// splice DOES NOT seem to work with objects
-		oldPositions.splice(indexToRemove, 1, "null"); //removes 1 element on index 'indexToRemove'
+		oldPositions.splice(indexToRemove, 1, "null"); //removes 1 element on index 'indexToRemove' and sets to "null" in order not to mess up the indexes on the eggs
 		var newPositions = oldPositions;	
 		//posts the new positions to channel
 		publish(newPositions,eggChannel);
 	}
-
-
 }
 
 
 function getEggs() {
+	//gets all the remaining eggs
 	var remainingEggs;
 	pubnub_data.history({
 		channel: eggChannel,
@@ -332,12 +320,8 @@ function getEggs() {
 	
 }
 
-
-
-
-
-
 function updateMyScore() {
+	//updates score with +1 for each taken egg
 	var myScore = document.getElementById("myScore").innerHTML;
 	var myScore = parseInt(myScore);
 	myScore = myScore+1;
@@ -350,10 +334,6 @@ function updateMyScore() {
 
 	
 }
-
-
-
-
 
 function gameReady() {
 	startGame = true;

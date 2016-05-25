@@ -1,10 +1,9 @@
-// creates eggs
 function createEggs(){
+  // creates eggs
   randomPositions = randomEggs();
-  //randomPositions = [[59.347425, 18.072734], [59.347538, 18.073198]];
   for (var i = 0; i < randomPositions.length; i ++) {
     eggName = "egg" + String(i);
-    //console.log("randomPositions", randomPositions[i][0], i); 
+    //creates Google maps markers for each of the eggs
     var egg = new google.maps.Marker({
       position: {lat: randomPositions[i][0], lng: randomPositions[i][1]},
       map: map,
@@ -14,17 +13,17 @@ function createEggs(){
     });
     eggs.push(egg);
     eggData.push(egg.title, [egg.position.lat(), egg.position.lng()]);
-    // eggData = Array [ "egg0", [lat,lng], "egg1", ... ]
   }
   
-  publish(eggData, eggChannel);
+  publish(eggData, eggChannel); //publishes egg title and position to eggChannel(pubnub)
 }
 
 
 function placeEggs(eggPositions){
-  console.log("placeEggs()");
+  //places already created eggs on map and store in variables "eggs" and "eggData"
   for (var i = 0; i < eggPositions.length; i +=2) {
     eggName = eggPositions[i];
+    //creates Google maps markers for each of the eggs
     var egg = new google.maps.Marker({
       position: {lat: eggPositions[i+1][0], lng: eggPositions[i+1][1]},
       map: map,
@@ -34,14 +33,15 @@ function placeEggs(eggPositions){
     });
     eggs.push(egg);
     eggData.push(egg.title, [egg.position.lat(), egg.position.lng()]);
-
   }
 }
 
 var randomEggs = function() {
+  //calculates different lat/lng within radius and returns a list
+  // of positions
   randomPositions = [];
   for (var i = 0; i < 7; i ++) {
-    var r = 50/111300, // = 100 meters
+    var r = 50/111300, // = 50 meter radius
         y0 = 59.347451,
         x0 = 18.073773,
         u = Math.random(),
@@ -60,6 +60,7 @@ var randomEggs = function() {
 
 
 var getLocation = function(){
+  //används den här markern???
   marker = new google.maps.Marker({
     position: null,
     map: map,
@@ -70,6 +71,7 @@ var getLocation = function(){
   
 
   if (navigator.geolocation){
+    //if geolocation available, watchPosition for continous updating of position marker
     navigator.geolocation.watchPosition(
       function(position){
         var currentPos = {
@@ -77,18 +79,19 @@ var getLocation = function(){
           lng : position.coords.longitude
         };
         updatePlayerMarker(currentPos);
-        publish(currentPos,positionChannel);
+        publish(currentPos,positionChannel); //updates positionChannel
        
-        getEggs();
+        getEggs(); //gets all the eggs that are not taken already
         
-        userDistance(position.coords.latitude, position.coords.longitude);
+        userDistance(position.coords.latitude, position.coords.longitude); //initates check for user distance to egg
       }
     )
   }
 }
 
 var checkForEggs = function(remainingEggs) {
-  //läs av history för alla nuvarande ägg
+  //checks "eggs" (list) for remaining eggs, compares those eggs to the remaining 
+  // eggs in eggChannel, removes any egg in "eggs" that is not in "remainingEggs"
   for (i = 0; i < eggs.length; i++){
     if (eggs[i] != "null"){
       var currEgg = eggs[i];
@@ -112,6 +115,8 @@ var rad = function(x) {
 };
 
 var userDistance = function(userLat, userLng) {
+  //middle step before getting distance to egg, checks for each egg in "eggs"-list
+  // calls getDistance to determine distance to said egg
   for (var j = 0; j < eggs.length; j ++) {
     if(eggs[j] !== "null"){
       var eggLat = eggs[j].position.lat();
@@ -125,6 +130,8 @@ var userDistance = function(userLat, userLng) {
 
 
 var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
+  //checks if user's distance to egg is less than 10m, if so, calls on various
+  // actions
   var R = 6378137; // Earth’s mean radius in meter
   var dLat = rad(eggLat - userLat);
   var dLong = rad(eggLng - userLng);
@@ -134,14 +141,15 @@ var getDistance = function(userLat, userLng, eggLat, eggLng, eggTitle) {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var distance = R * c;
   if (distance < 10) {
-    removeEgg(eggTitle);
-    updateMyScore()
-    vibrate();
+    removeEgg(eggTitle); //removes egg from "eggs" and "eggData" for the user who took the egg
+    updateMyScore() //updates score with +1 after taken egg
+    vibrate(); //makes phone vibrate when egg is taken
   }
 }
 var count = 3;
 
 var countDown = function (){
+  //count down from 3 to 0 when game is started
   document.getElementById("waitingForPlayers").outerHTML = "";
   var countInterval = setInterval(function(){
     //console.log(count);
@@ -161,13 +169,10 @@ var countDown = function (){
 };
 
 var vibrate = function(){
+  //vibrates phone to indicate that you took the egg
   if (navigator.vibrate) {
     navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
     navigator.vibrate(1000)
  
 }
-
-
-  //var distance = getDistance(sq1Lat, sq1Lng, sq2Lat, sq2Lng).toFixed(2)
-  //return distance; // returns the distance in meter
 };

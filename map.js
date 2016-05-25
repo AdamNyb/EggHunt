@@ -5,16 +5,16 @@ var Sthlm2 = {lat: 59.329339, lng: 18.068701};
 var KTH = {lat: 59.347451, lng: 18.073773};
 var newPlace = {lat: 59.3475983, lng: 18.073206};
 var map;
-var eggs = [];
-var eggData = [];
-var marker;
+var eggs = []; //contains all markers (eggs)
+var eggData = []; //contains certain data of eggs (title + position)
+var marker; //player marker
 var initialPos;
 var readyPlayers = [];
 var playerReady = false;
 var gameStarted = false;
 var playerPositions = {};
 
-var clickedOnButton = false;
+var clickedOnButton = false; //"Ready"-btn
 
 
 // initializes the map
@@ -49,6 +49,7 @@ startButt.addEventListener('click', function(){
           count: 1,
           callback: function(history) {
             // controls if the game is already started, if so, don't start a new one
+            // but place out (placeEggs())the already created eggs 
             if (history[0][0].text == "gameStarted") {
               pubnub_data.history({
                 channel: eggChannel,
